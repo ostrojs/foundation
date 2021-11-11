@@ -1,0 +1,10 @@
+const jsonResource = require("@ostro/http/resources/json/jsonResources")
+class {{ class }} extends jsonResource {
+
+    static toObject(data) {
+        return data
+    }
+
+}
+
+module.exports = {{ class }};

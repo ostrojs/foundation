@@ -1,0 +1,45 @@
+{
+  "name": "@ostro/foundation",
+  "version": "0.0.0-alpha.0",
+  "description": "MVC framework for NodeJS",
+  "engines": {
+    "node": ">= 12.0"
+  },
+  "main": "application.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@ostro/auth": "^0.0.0-alpha.0",
+    "@ostro/config": "^0.0.0-alpha.0",
+    "@ostro/container": "^0.0.0-alpha.0",
+    "@ostro/contracts": "^0.0.0-alpha.0",
+    "@ostro/filesystem": "^0.0.0-alpha.0",
+    "@ostro/http": "^0.0.0-alpha.0",
+    "@ostro/logger": "^0.0.0-alpha.0",
+    "@ostro/support": "^0.0.0-alpha.0",
+    "dotenv": "10.0.0",
+    "csrf": "3.1.0",
+    "fs-extra": "^10.0.0",
+    "serve-static": "1.14.1",
+    "lodash.get": "^4.4.2",
+    "ouch": "^2.0.0"
+  },
+  "keywords": [
+    "ostro",
+    "framework",
+    "nodejs framework",
+    "mvc",
+    "foundation"
+  ],
+  "author": "amar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostrojs/foundation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ostrojs/foundation/issues"
+  },
+  "homepage": "https://github.com/ostrojs/foundation#readme"
+}

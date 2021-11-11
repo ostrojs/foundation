@@ -1,0 +1,10 @@
+const JsonResourceCollection = require("@ostro/http/resources/json/resourceCollection")
+class {{ class }} extends JsonResourceCollection {
+
+    static toObject(data) {
+        return data
+    }
+
+}
+
+module.exports = {{ class }};

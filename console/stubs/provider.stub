@@ -1,0 +1,17 @@
+const  ServiceProvider = require('@ostro/support/serviceProvider')
+
+class DummyClass extends ServiceProvider
+{
+
+    public function register()
+    {
+        //
+    }
+
+    public function boot()
+    {
+        //
+    }
+}
+
+module.exports = DummyClass
