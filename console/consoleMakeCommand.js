@@ -2,33 +2,25 @@ const GeneratorCommand = require('@ostro/console/generatorCommand')
 
 class FactoryMakeCommand extends GeneratorCommand {
 
-    get $signature() {
-        return 'make:command';
-    }
+    $signature = 'make:command';
 
-    get $description() {
-        return 'Create a new Assistant command'
-    };
+    $description =  'Create a new Assistant command';
 
-    get $options() {
-        return [
-            this.createOption('--command [command] ', 'The terminal command that should be assigned'),
-        ]
-    }
+    $options = [
+        this.createOption('--command [command] ', 'The terminal command that should be assigned'),
+    ];
 
-    get $arguments() {
-        return [
-            this.createArgument('[name]', 'The name of the command').required()
-        ]
-    }
+    $arguments =  [
+        this.createArgument('[name]', 'The name of the command').required()
+    ];
 
-    get $type() {
-        return 'Console command'
-    }
+    $type = 'Console command';
 
     replaceClass($stub, $name) {
+        $name = $name.replaceAll(':',' ')
         $stub = super.replaceClass($stub, $name);
-        return $stub.replaceAll(['dummy:command', '{{ command }}'], this.option('command'));
+        let $command = this.option('command') || this.argument('name')
+        return $stub.replaceAll(['dummy:command', '{{ command }}'], $command);
     }
 
     getStub() {
