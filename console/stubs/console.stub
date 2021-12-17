@@ -1,13 +1,12 @@
 const Command = require('@ostro/console/command')
 
-class {{ class }} extends Command
-{
+class {{ class }} extends Command {
 
     $signature = '{{ command }}';
 
     $description = 'Command description';
 
-    handle(){
+    handle() {
 
     }
 }

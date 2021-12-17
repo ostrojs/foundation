@@ -1,7 +1,7 @@
 const Model = require('@ostro/database/eloquent/model')
 
-class {{ class }} extends Model{
+class {{ class }} extends Model {
 
 }
 
-module.exports  = {{ class }}
+module.exports = {{ class }}
