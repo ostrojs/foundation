@@ -2,29 +2,20 @@ const fs = require('fs-extra')
 const path = require('path')
 const KernelContract = require('@ostro/contracts/console/kernel')
 const Assistant = require('@ostro/console/application')
-const kCommandLoaded = Symbol('commandsLoaded')
+
 class Kernel extends KernelContract {
-    get $commandsLoaded() {
-        return this[kCommandLoaded] = this[kCommandLoaded] || false
-    }
 
-    set $commandsLoaded(value) {
-        return this[kCommandLoaded] = value
-    }
+    $commandsLoaded = false;
 
-    get bootstrappers() {
-        return [
+    bootstrappers = [
             '@ostro/foundation/bootstrap/loadEnvironmentVariables',
             '@ostro/foundation/bootstrap/loadConfiguration',
             '@ostro/foundation/bootstrap/registerFacades',
             '@ostro/foundation/bootstrap/registerProviders',
             '@ostro/foundation/bootstrap/bootProviders',
-        ];
-    }
+    ];
 
-    get $commands() {
-        return {}
-    }
+    $commands =  {};
 
     constructor() {
         super()
@@ -42,6 +33,13 @@ class Kernel extends KernelContract {
             this.commands();
             this.$commandsLoaded = true;
         }
+    }
+
+    callCommand($command, $parameters = [], $outputBuffer = null) {
+        
+        this.bootstrap();
+
+        return this.getAssistant().call($command, $parameters, $outputBuffer);
     }
 
     getAssistant() {
