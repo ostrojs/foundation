@@ -1,9 +1,6 @@
+class {{ class }} {
 
-class {{ class }}
-{
-
-    constructor()
-    {
+    constructor() {
         //
     }
 
