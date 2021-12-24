@@ -1,15 +1,12 @@
-const  ServiceProvider = require('@ostro/support/serviceProvider')
+const ServiceProvider = require('@ostro/support/serviceProvider')
 
-class DummyClass extends ServiceProvider
-{
+class DummyClass extends ServiceProvider {
 
-    public function register()
-    {
+    register() {
         //
     }
 
-    public function boot()
-    {
+    boot() {
         //
     }
 }
