@@ -13,6 +13,7 @@ class View {
         const fn = function(file, data = {}, status = 200) {
 
             fn.render(...arguments)
+            return http.response
         }
         fn.engine = function(engine) {
             Object.defineProperty(http.response, '__viewEngine', {
@@ -29,16 +30,18 @@ class View {
             Object.assign(data, context)
 
             app.view.engine(http.response.__viewEngine).renderFile(file, data, async (data) => {
+                data = await data
                 if (typeof data == 'object' && data instanceof Promise == false) {
-                    return next(new ViewException(await data))
+                    return next(new ViewException(data))
                 }
                 try {
-                    http.response.send(await data, status)
+                    http.response.send(data, status)
                 } catch (e) {
                     next(e)
                 }
 
             })
+            return http.response
 
         }
         return fn

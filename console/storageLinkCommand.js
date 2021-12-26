@@ -1,20 +1,15 @@
 const Command = require('@ostro/console/command')
 class StorageLinkCommand extends Command {
 
-    get $signature() {
-        return 'storage:link'
-    }
+    $signature = 'storage:link';
 
-    get $description() {
-        return 'Create the symbolic links configured for the application'
-    };
+    $description = 'Create the symbolic links configured for the application';
 
-    get $options() {
-        return [
-            this.createOption('--relative', 'The host address to serve the application on'),
-            this.createOption('--force', 'The port to serve the application on')
-        ]
-    }
+    $options = [
+        this.createOption('--relative', 'The host address to serve the application on'),
+        this.createOption('--force', 'The port to serve the application on')
+    ];
+    
     constructor($file) {
         super()
         this.$file = $file
@@ -48,7 +43,8 @@ class StorageLinkCommand extends Command {
 
     links() {
         return this.$app['config']['filesystems.links'] || {
-            [public_path('storage')]: storage_path('app/public') };
+            [public_path('storage')]: storage_path('app/public')
+        };
     }
 
     isRemovableSymlink($link, $force) {

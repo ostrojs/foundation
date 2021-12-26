@@ -2,17 +2,11 @@ const GeneratorCommand = require('@ostro/console/generatorCommand')
 
 class EventMakeCommand extends GeneratorCommand {
 
-    get $signature() {
-        return 'make:event';
-    }
+    $signature = 'make:event';
 
-    get $description() {
-        return 'Create a new event class';
-    }
+    $description = 'Create a new event class';
 
-    get $type() {
-        return 'Event';
-    }
+    $type = 'Event';
 
     alreadyExists($rawName) {
         return this.$file.exists(this.getPath(this.qualifyClass($rawName)));

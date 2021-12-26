@@ -13,14 +13,14 @@ const kHandle = Symbol('handle')
 const kLogger = Symbol('logger')
 
 class Handler {
-    $dontReport =  [
+    $dontReport = [
         validationException,
         JsonException,
         Redirect,
         TokenMismatchException
     ];
 
-    $dontFlash =  [];
+    $dontFlash = [];
 
     constructor(handler) {
         this[kHandle] = handler
@@ -35,52 +35,57 @@ class Handler {
 
     render(request, response, $e = {}) {
         if ($e instanceof PageNotFoundException) {
-            return this.pageNotFoundException(request, response, $e)
+            this.pageNotFoundException(request, response, $e)
         } else if ($e instanceof validationException) {
-            return this.convertValidationExceptionToResponse(request, response, $e);
+            this.convertValidationExceptionToResponse(request, response, $e);
         } else if ($e instanceof TokenMismatchException) {
-            return this.tokenMismatchException(request, response, $e)
+            this.tokenMismatchException(request, response, $e)
         } else if ($e instanceof AuthenticationException) {
-            return this.unauthenticated(request, response, $e);
+            this.unauthenticated(request, response, $e);
         } else if ($e instanceof Redirect) {
-            return this.redirect(response, $e)
+            this.redirect(response, $e)
         } else if ($e instanceof FileNotFoundException) {
-            return response.send({
+            response.send({
                 name: $e.name,
                 message: $e.message
             }, $e.statusCode)
         } else if ($e instanceof FileUploadException) {
-            return response.send({
+            response.send({
                 name: $e.name,
                 message: $e.message
             }, $e.statusCode)
         } else if ($e instanceof JsonException) {
-            return this.send({
+            response.send({
                 name: $e.name,
                 message: $e.message,
                 errors: $e.errors
             }, $e.statusCode)
         } else if (typeof $e.message == 'object') {
-            $e = $e.message
+            this[kHandle].render(
+                request,
+                response,
+                $e
+            )
+        } else {
+            this[kHandle].render(
+                request,
+                response,
+                $e
+            )
         }
         this.report($e)
-        this[kHandle].render(
-            request,
-            response,
-            $e
-        )
+
 
     }
 
-    unauthenticated($request, $response, $exception)
-    {
-        return $request.expectsJson()
-                    ? $response.json({'message' : $exception.message}, 401)
-                    : $response.redirect().to($exception.redirectTo() || route('login'));
+    unauthenticated($request, $response, $exception) {
+        return $request.expectsJson() ?
+            $response.json({ 'message': $exception.message }, 401) :
+            $response.redirect().to($exception.redirectTo() || route('login'));
     }
 
     redirect(response, $e) {
-        response.with($e.getFlash()).withErrors($e.getErrors()).withInput($e.wantedInput()).redirect($e.getUrl());
+        response.with(...$e.getFlash()).withErrors(...$e.getErrors()).withInput($e.wantedInput()).redirect($e.getUrl());
     }
 
     jsonException(response, $e) {
@@ -91,7 +96,7 @@ class Handler {
         this.report($e)
         response.send($e)
     }
-    
+
     convertValidationExceptionToResponse(request, response, $e) {
         if ($e.response) {
             return $e.response;
@@ -111,7 +116,7 @@ class Handler {
 
     invalid(request, response, $exception) {
 
-        if(request.session instanceof Session){
+        if (request.session instanceof Session) {
             response.withInput(Object.except(request.input(), this.$dontFlash))
                 .withErrors($exception.all())
         }

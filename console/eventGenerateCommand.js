@@ -2,13 +2,9 @@ const Command = require('@ostro/console/command')
 const EventServiceProvider = require('@ostro/event/eventServiceProvider')
 class EventGenerateCommand extends Command {
 
-    get $signature() {
-        return 'event:generate'
-    };
+    $signature = 'event:generate';
 
-    get $description() {
-        return 'Generate the missing events and listeners based on registration';
-    }
+    $description = 'Generate the missing events and listeners based on registration';
 
     async handle() {
 
