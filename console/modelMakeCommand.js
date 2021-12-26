@@ -2,32 +2,24 @@ const GeneratorCommand = require('@ostro/console/generatorCommand')
 
 class ModelMakeCommand extends GeneratorCommand {
 
-    get $signature() {
-        return 'make:model';
-    }
+    $signature = 'make:model';
 
-    get $description() {
-        return 'Create a new Eloquent model class'
-    };
+    $description = 'Create a new Eloquent model class';
 
-    get $options() {
-        return [
-            this.createOption('-a, --all', 'Generate a migration, seeder, factory, and resource controller for the model'),
-            this.createOption('-c, --controller', 'Create a new controller for the model'),
-            this.createOption('-f, --factory', 'Create a new factory for the model'),
-            this.createOption('--force', 'Create the class even if the model already exists'),
-            this.createOption('-m, --migration', 'Create a new migration file for the model'),
-            this.createOption('-s, --seed', 'Create a new seeder file for the model'),
-            this.createOption('-p, --pivot', 'Indicates if the generated model should be a custom intermediate table model'),
-            this.createOption('-r, --resource', 'Indicates if the generated controller should be a resource controller'),
-            this.createOption('--api', 'Indicates if the generated controller should be an API controller'),
+    $options = [
+        this.createOption('-a, --all', 'Generate a migration, seeder, factory, and resource controller for the model'),
+        this.createOption('-c, --controller', 'Create a new controller for the model'),
+        this.createOption('-f, --factory', 'Create a new factory for the model'),
+        this.createOption('--force', 'Create the class even if the model already exists'),
+        this.createOption('-m, --migration', 'Create a new migration file for the model'),
+        this.createOption('-s, --seed', 'Create a new seeder file for the model'),
+        this.createOption('-p, --pivot', 'Indicates if the generated model should be a custom intermediate table model'),
+        this.createOption('-r, --resource', 'Indicates if the generated controller should be a resource controller'),
+        this.createOption('--api', 'Indicates if the generated controller should be an API controller'),
 
-        ]
-    }
+    ];
 
-    get $type() {
-        return 'Model';
-    }
+    $type = 'Model';
 
     get $dirname() {
         return __dirname

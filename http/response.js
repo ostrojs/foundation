@@ -14,14 +14,20 @@ class HttpResponse extends Response {
         super.send(body, status)
     }
 
-    with(obj = {}) {
+    with(key, value) {
+        let obj = typeof key == 'string' ? {
+            [key]: value
+        } : key;
+        obj = obj || {}
         this.req.session.flash(obj)
         return this;
     }
 
-    withInput(data = true) {
-        if (data) {
-            this.req.session.flash('__inputs', this.req.except('_token'))
+    withInput(key, value) {
+        key = typeof key == 'string' ? { key: value } : key;
+        if (key) {
+            key = key === true ? this.req.except('_token') : key
+            this.req.session.flash('__inputs', key)
         }
         return this;
     }

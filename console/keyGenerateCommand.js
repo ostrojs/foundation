@@ -2,20 +2,14 @@ const Command = require('@ostro/console/command')
 const Crypto = require('crypto')
 class KeyGenerateCommand extends Command {
 
-    get $signature() {
-        return 'key:generate';
-    }
+    $signature = 'key:generate';
 
-    get $description() {
-        return 'Set the application key'
-    };
+    $description = 'Set the application key';
 
-    get $options() {
-        return [
-            this.createOption('--show [command] ', 'Display the key instead of modifying files'),
-            this.createOption('--force [command] ', 'Force the operation to run when in production'),
-        ]
-    }
+    $options = [
+        this.createOption('--show [command] ', 'Display the key instead of modifying files'),
+        this.createOption('--force [command] ', 'Force the operation to run when in production'),
+    ];
 
     constructor(file) {
         super()

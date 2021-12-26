@@ -2,21 +2,15 @@ const GeneratorCommand = require('@ostro/console/generatorCommand')
 
 class ResourceMakeCommand extends GeneratorCommand {
 
-    get $signature() {
-        return 'make:resource';
-    }
+    $signature = 'make:resource';
 
-    get $description() {
-        return 'Create a new resource';
-    }
+    $description = 'Create a new resource';
 
-    get $type() {
-        return 'Resource';
-    }
+    $type = 'Resource';
 
-    get $options() {
-        return [this.createOption('-c, --collection', 'Create a resource collection')]
-    }
+    $options = [
+        this.createOption('-c, --collection', 'Create a resource collection')
+    ];
 
     async handle() {
         if (this.collection()) {

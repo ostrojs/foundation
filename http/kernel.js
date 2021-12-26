@@ -2,49 +2,38 @@ const KernelContract = require('@ostro/contracts/http/kernel')
 const HttpContext = require('./httpContext')
 const kCachedMiddleware = Symbol('cachedMiddleware')
 class Kernel extends KernelContract {
-    
-    get $bootstrappers() {
-        return [
-            '@ostro/foundation/bootstrap/loadEnvironmentVariables',
-            '@ostro/foundation/bootstrap/loadConfiguration',
-            '@ostro/foundation/bootstrap/registerFacades',
-            '@ostro/foundation/bootstrap/registerProviders',
-            '@ostro/foundation/bootstrap/bootProviders',
-            '@ostro/foundation/bootstrap/handleSystemError',
-        ];
-    }
 
-    get $defaultMiddlewares() {
-        return []
-    }
+    $bootstrappers = [
+        '@ostro/foundation/bootstrap/loadEnvironmentVariables',
+        '@ostro/foundation/bootstrap/loadConfiguration',
+        '@ostro/foundation/bootstrap/registerFacades',
+        '@ostro/foundation/bootstrap/registerProviders',
+        '@ostro/foundation/bootstrap/bootProviders',
+        '@ostro/foundation/bootstrap/handleSystemError',
+    ];
 
-    get $middlewareGroups() {
-        return {}
-    }
+    $defaultMiddlewares = [];
 
-    get $namedMiddlewares() {
-        return {}
-    }
+    $middlewareGroups = {};
 
-    get $middlewarePriority() {
-        return [
-            require('@ostro/foundation/exception/middleware/exceptionHandler'),
-            require('@ostro/foundation/view/middleware/BindViewOnResponse'),
+    $namedMiddlewares = {};
 
-        ];
-    }
+    $middlewarePriority = [
+        require('@ostro/foundation/exception/middleware/exceptionHandler'),
+        require('@ostro/foundation/view/middleware/BindViewOnResponse'),
+    ];
 
     constructor() {
         super()
-
         this.bootstrap()
         this.$router = this.$app['router']
-        this.syncMiddlewareToRouter();
-        this.PrepareRouter()
+
     }
 
     handle() {
-        return  this.$router.handle()
+        this.syncMiddlewareToRouter();
+        this.PrepareRouter()
+        return this.$router.handle()
     }
 
     syncMiddlewareToRouter() {
