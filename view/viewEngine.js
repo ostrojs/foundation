@@ -30,15 +30,19 @@ class View {
             Object.assign(data, context)
 
             app.view.engine(http.response.__viewEngine).renderFile(file, data, async (data) => {
-                data = await data
-                if (typeof data == 'object' && data instanceof Promise == false) {
-                    return next(new ViewException(data))
-                }
-                try {
-                    http.response.send(data, status)
-                } catch (e) {
-                    next(e)
-                }
+                Promise.resolve(data)
+                    .then(res => {
+                        if (typeof res == 'object' && res instanceof Promise == false) {
+                            throw (new ViewException(res))
+                        }
+                        http.response.send(res, status)
+
+
+
+                    })
+                    .catch(e => {
+                        next(e)
+                    })
 
             })
             return http.response
