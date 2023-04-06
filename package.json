@@ -1,6 +1,6 @@
 {
   "name": "@ostro/foundation",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Foundation for OstroJS",
   "main": "application.js",
   "scripts": {
@@ -12,9 +12,9 @@
     "@ostro/container": "^1.0.2",
     "@ostro/contracts": "^1.0.0",
     "@ostro/filesystem": "^1.0.2",
-    "@ostro/http": "^1.0.2",
+    "@ostro/http": "^1.0.5",
     "@ostro/logger": "^1.0.0",
-    "@ostro/support": "^1.0.2",
+    "@ostro/support": "^1.0.6",
     "dotenv": "10.0.0",
     "csrf": "3.1.0",
     "fs-extra": "^10.0.0",
