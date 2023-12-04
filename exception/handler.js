@@ -150,7 +150,7 @@ class Handler {
     report($e) {
         if (!this.$dontReport.find((clazz) => $e instanceof clazz)) {
             if (typeof this[kLogger].getConfig == 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
-                if (typeof $e == 'object') {
+                if ($e && typeof $e == 'object') {
                     if (typeof $e.stack == 'string') {
                         $e.capture = $e.stack.split('\n    at ')
                     }
