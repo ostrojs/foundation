@@ -9,6 +9,13 @@ class ExceptionHandler {
             error
         )
     }
+    terminate(error, {request,response} ,next){
+        this.$exceptionHandler.handler('json').terminate(
+            request,
+            response,
+            error
+        )
+    }
 }
 
 module.exports = ExceptionHandler

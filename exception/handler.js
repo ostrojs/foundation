@@ -25,12 +25,14 @@ class Handler {
     constructor(handler) {
         this[kHandle] = handler
         this[kLogger] = app('logger')
-
     }
 
     handle(request, response, $e = {}) {
         this.render(request, response, $e)
+    }
 
+    terminate(request, response, $e = {}) {
+        this.report($e)
     }
 
     render(request, response, $e = {}) {
@@ -133,7 +135,7 @@ class Handler {
         } else {
             return fs.readFile(path.join(__dirname, 'template/errors/403'), {
                 encoding: 'utf8'
-            }, function(error, data) {
+            }, function (error, data) {
                 response.send(data, $e.statusCode)
             })
         }
@@ -141,14 +143,14 @@ class Handler {
     pageNotFoundException(request, response, $e) {
         return fs.readFile(path.join(__dirname, 'template/errors/404'), {
             encoding: 'utf8'
-        }, function(error, data) {
+        }, function (error, data) {
             response.send(data, $e.statusCode)
         })
     }
     report($e) {
         if (!this.$dontReport.find((clazz) => $e instanceof clazz)) {
             if (typeof this[kLogger].getConfig == 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
-                if (typeof $e == 'object') {
+                if ($e && typeof $e == 'object') {
                     if (typeof $e.stack == 'string') {
                         $e.capture = $e.stack.split('\n    at ')
                     }
