@@ -7,14 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ostro/auth": "^1.0.0",
+    "@ostro/auth": "^1.0.1",
     "@ostro/config": "^1.0.2",
     "@ostro/container": "^1.0.2",
-    "@ostro/contracts": "^1.0.0",
+    "@ostro/contracts": "^1.0.2",
     "@ostro/filesystem": "^1.0.2",
     "@ostro/http": "^1.0.5",
     "@ostro/logger": "^1.0.0",
-    "@ostro/support": "^1.0.6",
+    "@ostro/support": "^1.0.11",
     "dotenv": "10.0.0",
     "csrf": "3.1.0",
     "fs-extra": "^10.0.0",
