@@ -1,0 +1,13 @@
+const app = require('./bootstrap/app')
+
+let kernel = app.make('@ostro/contracts/http/kernel');
+
+let serverless = app.make('@ostro/serverless');
+
+serverless.request(require('@ostro/foundation/http/request'))
+
+serverless.response(require('@ostro/foundation/http/response'))
+
+serverless.register(kernel.handle())
+
+module.exports = serverless
