@@ -11,7 +11,7 @@
     "@ostro/config": "^1.0.2",
     "@ostro/container": "^1.0.3",
     "@ostro/contracts": "^1.1.4",
-    "@ostro/filesystem": "^1.0.9",
+    "@ostro/filesystem": "^1.0.3",
     "@ostro/http": "^1.0.9",
     "@ostro/logger": "^1.0.0",
     "@ostro/support": "^1.2.1",
