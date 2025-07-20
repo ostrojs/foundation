@@ -39,17 +39,36 @@ class ServerlessBootstrapCommand extends Command {
     async configureRootApp() {
         const rootApp = this.$app.basePath("app.js");
         let content = await this.$file.get(rootApp);
-        content = content.replace(
-            /app\.make\(['"]@ostro\/contracts\/http\/kernel['"]\)/g,
-            "require('./serverless')"
-        );
-        // Ensure server.type('serverless') is present before server.start()
-        if (!/server\.type\(['"]serverless['"]\)/.test(content)) {
+        // Add server.type('serverless') before server.start() if not present
+        // Handle server.type(): ensure it's serverless
+        if (/server\.type\(['"]server['"]\)/.test(content)) {
+            // Replace server.type('server') with server.type('serverless')
+            content = content.replace(
+                /server\.type\(['"]server['"]\)/g,
+                "server.type('serverless')"
+            );
+        } else if (!/server\.type\(['"]serverless['"]\)/.test(content)) {
+            // Add server.type('serverless') before server.start() if neither exists
             content = content.replace(
                 /(server\.start\s*\(\s*\))/,
                 "server.type('serverless');\n\n$1"
             );
         }
+
+        // Add server.handler('serverless.handler') before server.start() if not present
+        if (!/server\.handler\(['"]serverless\.handler['"]\)/.test(content)) {
+            content = content.replace(
+                /(server\.start\s*\(\s*\))/,
+                "server.handler('serverless.handler');\n\n$1"
+            );
+        }
+
+        // Remove server.register(kernel.handle()) if it exists
+        content = content.replace(
+            /^\s*server\.register\(\s*kernel\.handle\s*\(\s*\)\s*\)\s*;?\s*$/gm,
+            ''
+        );
+
 
         await this.$file.put(rootApp, content);
 
