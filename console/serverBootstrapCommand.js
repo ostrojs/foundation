@@ -37,16 +37,32 @@ class ServerlessBootstrapCommand extends Command {
     async configureRootApp() {
         const rootApp = this.$app.basePath("app.js");
         let content = await this.$file.get(rootApp);
+
+        // Replace server.type('serverless') with server.type('server')
+        if (!/server\.type\(['"]server['"]\)/.test(content)) {
+            content = content.replace(
+                /server\.type\(['"]serverless['"]\);?/g,
+                "server.type('server');"
+            );
+        }
+
+
+
+        // Remove server.handler('serverless.handler')
         content = content.replace(
-            /require\(['"]\.\/serverless['"]\)/g,
-            "app.make('@ostro/contracts/http/kernel')"
+            /^\s*server\.handler\(['"]serverless\.handler['"]\);?\s*$/gm,
+            ''
         );
-        // Ensure server.type('serverless') is present before server.start()
-        // Remove any occurrence of server.type('serverless')
-        content = content.replace(/server\.type\(['"]serverless['"]\);\s*/g, '');
+
+        // Add server.register(kernel.handle()) before server.start() if not present
+        if (!/server\.register\(\s*kernel\.handle\(\)\s*\)/.test(content)) {
+            content = content.replace(
+                /(server\.start\s*\(\s*\))/,
+                "server.register(kernel.handle());\n\n$1"
+            );
+        }
 
         await this.$file.put(rootApp, content);
-
     }
     async removeServerlessFile() {
         const fullPath = this.$app.basePath("serverless.js");
