@@ -19,21 +19,21 @@ class HttpResponse extends Response {
             [key]: value
         } : key;
         obj = obj || {}
-        this.req.session.flash(obj)
+        this.request.session.flash(obj)
         return this;
     }
 
     withInput(key, value) {
         key = typeof key == 'string' ? { key: value } : key;
         if (key) {
-            key = key === true ? this.req.except('_token') : key
-            this.req.session.flash('__inputs', key)
+            key = key === true ? this.request.except('_token') : key
+            this.request.session.flash('__inputs', key)
         }
         return this;
     }
 
     withErrors(errors = {}) {
-        this.req.session.flash('__errors', errors)
+        this.request.session.flash('__errors', errors)
         return this
     }
 
