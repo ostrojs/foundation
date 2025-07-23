@@ -1,26 +1,14 @@
 const Container = require('@ostro/container')
-const LoadEnvironmentVariables = require('./bootstrap/loadConfiguration')
 const Filesystem = require('@ostro/filesystem/filesystem')
 const ProviderRepository = require('./providerRepository')
 const Env = require('@ostro/support/env')
 const path = require('path')
 const Mix = require('./mix')
-const kBasePath = Symbol('basePath')
-const kHasBeenBootstrapped = Symbol('hasBeenBootstrapped')
-const kBooted = Symbol('booted')
-const kServiceProviders = Symbol('serviceProviders')
-const kDeferredServices = Symbol('deferredServices')
-const kLoadedProviders = Symbol('loadedProviders')
-const kAppPath = Symbol('appPath')
-const kDatabasePath = Symbol('databasePath')
-const kLangPath = Symbol('langPath')
-const kStoragePath = Symbol('storagePath')
-const kEnvironmentPath = Symbol('environmentPath')
-const kEnvironmentFile = Symbol('environmentFile')
+const { isMainThread } = require('worker_threads');
 class Application extends Container {
 
     get VERSION() {
-        return '0.0.0-alpha.0';
+        return '1.1.5';
     }
 
     _basePath;
@@ -66,7 +54,7 @@ class Application extends Container {
 
     registerBaseBindings() {
         this.instance('app', this);
-        this.singleton('mix', function(app) {
+        this.singleton('mix', function (app) {
             return new Mix(app)
         });
 
@@ -88,7 +76,7 @@ class Application extends Container {
     registerConfiguredProviders() {
         let $providers = this.config['app.providers'];
         (new ProviderRepository(this, new Filesystem, this.getCachedServicesPath()))
-        .load($providers);
+            .load($providers);
 
     }
 
@@ -114,7 +102,12 @@ class Application extends Container {
 
     setBasePath(basePath) {
         this._basePath = path.resolve(basePath);
-        process.chdir(this._basePath || process.cwd());
+        if (isMainThread) {
+            process.chdir(this._basePath || process.cwd());
+        } else {
+            globalThis.APP_BASE_PATH = this._basePath || process.cwd()
+        }
+
         this.bindPathsInContainer();
 
         return this;
@@ -180,7 +173,7 @@ class Application extends Container {
 
     getProviders($provider) {
 
-        return this._serviceProviders.find(function(value) {
+        return this._serviceProviders.find(function (value) {
             return value instanceof $provider
         })
     }
@@ -223,7 +216,7 @@ class Application extends Container {
         this.register($provider);
 
         if (!this.isBooted()) {
-            this.booting(function() {
+            this.booting(function () {
                 this.bootProvider($instance);
             });
         }
