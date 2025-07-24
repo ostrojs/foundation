@@ -1,0 +1,71 @@
+module.exports = {
+  /*
+  |--------------------------------------------------------------------------
+  | Serverless Function Handler
+  |--------------------------------------------------------------------------
+  |
+  | Specifies the default handler entrypoint used when deploying your
+  | serverless function. This corresponds to the file and method exported
+  | from your compiled build (e.g., serverless.handler means handler()
+  | in serverless.js or serverless.ts).
+  |
+  | Format: "<filename>.<exportedFunction>"
+  |
+  */
+  'handler': env('APP_SERVERLESS_HANDLER', 'serverless.handler'),
+  
+  /*
+  |--------------------------------------------------------------------------
+  | Serverless Execution Strategy
+  |--------------------------------------------------------------------------
+  |
+  | Defines how incoming serverless requests are handled. Choose one of the
+  | available strategies based on your needs for performance and isolation.
+  |
+  | Supported:
+  |   - "vm"      : Lightweight sandbox using Node VM module
+  |   - "thread"  : Runs in a Node.js Worker Thread
+  |   - "fork"    : Forks a new process per request (default)
+  |   - "process" : Persistent background process
+  |
+  */
+  'strategy': env('APP_SERVERLESS_STRATEGY', 'fork'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Serverless Platform
+  |--------------------------------------------------------------------------
+  |
+  | The cloud platform where your serverless function is deployed. This
+  | controls how events are normalized and platform-specific logic is applied.
+  |
+  | Supported:
+  |   - "aws"     : AWS Lambda
+  |   - "gcp"     : Google Cloud Functions or Cloud Run
+  |   - "azure"   : Azure Functions
+  |   - "local"   : Local runtime / development
+  |   - "generic" : Default fallback for cross-platform usage
+  |
+  */
+  'platform': env('APP_SERVERLESS_PLATFORM', 'generic'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Serverless Gateway Type (for AWS only)
+  |--------------------------------------------------------------------------
+  |
+  | Required only when the platform is "aws". This defines the trigger
+  | or gateway type (e.g., API Gateway, ALB, Lambda URL).
+  |
+  | Supported (for AWS only):
+  |   - "http"        : API Gateway v2 (HTTP API)
+  |   - "alb"         : Application Load Balancer
+  |   - "lambda-url"  : Lambda Function URL
+  |   - "cloudfront"  : Lambda@Edge
+  |
+  | Ignored for non-AWS platforms. Leave empty if not using AWS.
+  |
+  */
+  'getway': env('APP_SERVERLESS_GETWAY', ''),
+
+};
