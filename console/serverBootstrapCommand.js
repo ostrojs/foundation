@@ -27,7 +27,7 @@ class ServerlessBootstrapCommand extends Command {
         }
         try {
             await this.configureRootApp();
-            await this.removeServerlessFile();
+            // await this.removeServerlessFile();
         } catch (error) {
             this.error(`Error during serverless bootstrap: ${error.message}`);
             return;
@@ -57,7 +57,7 @@ class ServerlessBootstrapCommand extends Command {
         // Add server.register(kernel.handle()) before server.start() if not present
         if (!/server\.register\(\s*kernel\.handle\(\)\s*\)/.test(content)) {
             content = content.replace(
-                /(server\.start\s*\(\s*\))/,
+                /(server\.start\s*\(\s*)/,
                 "server.register(kernel.handle());\n\n$1"
             );
         }

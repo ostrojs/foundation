@@ -30,6 +30,7 @@ class ServerlessBootstrapCommand extends Command {
         try {
             await this.configureRootApp();
             await this.generateServerlessFile();
+            await this.generateServerlessConfigFile();
         } catch (error) {
             this.error(`Error during serverless bootstrap: ${error.message}`);
             return;
@@ -50,7 +51,7 @@ class ServerlessBootstrapCommand extends Command {
         } else if (!/server\.type\(['"]serverless['"]\)/.test(content)) {
             // Add server.type('serverless') before server.start() if neither exists
             content = content.replace(
-                /(server\.start\s*\(\s*\))/,
+                /(server\.start\s*\(\s*)/,
                 "server.type('serverless');\n\n$1"
             );
         }
@@ -76,6 +77,11 @@ class ServerlessBootstrapCommand extends Command {
     async generateServerlessFile() {
         const fullPath = this.$app.basePath("serverless.js");
         await this.$file.put(fullPath, await this.$file.get(__dirname + '/stubs/serverless.stub'));
+
+    }
+    async generateServerlessConfigFile() {
+        const fullPath = this.$app.configPath("serverless.js");
+        await this.$file.put(fullPath, await this.$file.get(__dirname + '/stubs/serverless.config.stub'));
 
     }
 
