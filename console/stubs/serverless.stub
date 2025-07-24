@@ -2,7 +2,7 @@ const app = require('./bootstrap/app')
 
 let kernel = app.make('@ostro/contracts/http/kernel');
 
-let serverless = app.make('@ostro/serverless');
+let serverless = app.make('@ostro/serverless',app.config);
 
 serverless.request(require('@ostro/foundation/http/request'))
 
