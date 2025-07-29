@@ -55,15 +55,7 @@ class ServerlessBootstrapCommand extends Command {
                 "server.type('serverless');\n\n$1"
             );
         }
-
-        // Add server.handler('serverless.handler') before server.start() if not present
-        if (!/server\.handler\(['"]serverless\.handler['"]\)/.test(content)) {
-            content = content.replace(
-                /(server\.start\s*\(\s*\))/,
-                "server.handler('serverless.handler');\n\n$1"
-            );
-        }
-
+        
         // Remove server.register(kernel.handle()) if it exists
         content = content.replace(
             /^\s*server\.register\(\s*kernel\.handle\s*\(\s*\)\s*\)\s*;?\s*$/gm,
