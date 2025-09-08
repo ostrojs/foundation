@@ -6,9 +6,9 @@ class HttpResponse extends Response {
     send(body, status = 200) {
         if (body instanceof Model) {
             body = body.serialize()
-        } else if (body instanceof Collection) {
+        } else if (body instanceof Collection && body.isArray()) {
             body = body.toArray()
-        } else if (body instanceof Collection) {
+        } else if (body instanceof Collection && body.isJson()) {
             body = body.toJSON()
         }
         super.send(body, status)
