@@ -1,6 +1,6 @@
 {
   "name": "@ostro/foundation",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Foundation for OstroJS",
   "main": "application.js",
   "scripts": {
