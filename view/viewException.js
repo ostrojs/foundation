@@ -1,12 +1,11 @@
 const ViewExceptionContract = require('@ostro/contracts/view/viewException')
 class ViewException extends ViewExceptionContract {
     constructor(errors) {
-        super();
+        super(errors);
         this.name = this.constructor.name;
-        this.message = errors;
+        this.message = errors.message || errors;
         this.statusCode = 500;
-        Error.captureStackTrace(this, this.constructor);
-
+        this.stack = errors.stack || (new Error()).stack;
     }
 }
 module.exports = ViewException
