@@ -66,6 +66,6 @@ module.exports = {
   | Ignored for non-AWS platforms. Leave empty if not using AWS.
   |
   */
-  'getway': env('APP_SERVERLESS_GETWAY', ''),
+  'gateway': env('APP_SERVERLESS_GETWAY', ''),
 
 };
