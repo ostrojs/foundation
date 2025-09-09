@@ -9,7 +9,7 @@ class Whoops {
     }
     render(request, response, $exception = {}) {
         if (!response.headersSent) {
-            response.writeHead(($exception.statusCode || 500), 'Content-Type: text/html');
+            response.writeHead(($exception.statusCode || 500), {'Content-Type': 'text/html'});
         }
         this[kHandler].handleException($exception, request, response)
     }
