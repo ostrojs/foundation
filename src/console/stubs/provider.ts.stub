@@ -1,0 +1,14 @@
+import ServiceProvider from '@ostro/support/serviceProvider';
+
+class DummyClass extends ServiceProvider {
+
+    public register(): void {
+        //
+    }
+
+    public boot(): void {
+        //
+    }
+}
+
+export default DummyClass;
