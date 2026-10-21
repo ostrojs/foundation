@@ -1,0 +1,7 @@
+import Model from '@ostro/database/eloquent/model';
+
+class {{ class }} extends Model {
+
+}
+
+export default {{ class }};

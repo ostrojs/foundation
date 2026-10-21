@@ -1,43 +1,74 @@
 {
-  "name": "@ostro/foundation",
-  "version": "1.1.12",
-  "description": "Foundation for OstroJS",
-  "main": "application.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@ostro/auth": "^1.0.1",
-    "@ostro/config": "^1.0.2",
-    "@ostro/container": "^1.0.3",
-    "@ostro/contracts": "^1.1.4",
-    "@ostro/filesystem": "^1.0.3",
-    "@ostro/http": "^1.0.9",
-    "@ostro/logger": "^1.0.0",
-    "@ostro/support": "^1.2.1",
-    "@ostro/console": "^1.0.6",
-    "dotenv": "10.0.0",
-    "csrf": "3.1.0",
-    "fs-extra": "^10.0.0",
-    "serve-static": "1.14.1",
-    "lodash.get": "^4.4.2",
-    "ouch": "^2.0.0"
-  },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "engineStrict": true,
-  "keywords": [
-    "foundation"
-  ],
-  "author": "amar",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ostrojs/foundation.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ostrojs/foundation/issues"
-  },
-  "homepage": "https://github.com/ostrojs/foundation#readme"
+    "name": "@ostro/foundation",
+    "version": "2.0.0-alpha.1",
+    "description": "Foundation for OstroJS",
+    "main": "build/application.js",
+    "exports": {
+        ".": {
+            "types": "./build/application.d.ts",
+            "default": "./build/application.js"
+        },
+        "./*": {
+            "types": "./build/*.d.ts",
+            "default": "./build/*.js"
+        }
+    },
+    "scripts": {
+        "test": "npx c8 npx jest",
+        "build": "rm -rf build && npx tsc -p tsconfig.build.json && node -e \"const fs=require(\\\"fs\\\"); if(fs.existsSync(\\\"src/exception/template\\\"))fs.cpSync(\\\"src/exception/template\\\",\\\"build/exception/template\\\",{recursive:true}); if(fs.existsSync(\\\"src/console/stubs\\\"))fs.cpSync(\\\"src/console/stubs\\\",\\\"build/console/stubs\\\",{recursive:true});\" && node scripts/build.js",
+        "prepublishOnly": "npm run build",
+        "clean": "rm -rf build coverage"
+    },
+    "dependencies": {
+        "@ostro/auth": "^2.0.0-alpha.1",
+        "@ostro/cache": "^2.0.0-alpha.1",
+        "@ostro/config": "^2.0.0-alpha.1",
+        "@ostro/console": "^2.0.0-alpha.1",
+        "@ostro/container": "^2.0.0-alpha.1",
+        "@ostro/contracts": "^2.0.0-alpha.1",
+        "@ostro/database": "^2.0.0-alpha.1",
+        "@ostro/filesystem": "^2.0.0-alpha.1",
+        "@ostro/http": "^2.0.0-alpha.1",
+        "@ostro/logger": "^2.0.0-alpha.1",
+        "@ostro/router": "^2.0.0-alpha.1",
+        "@ostro/server": "^2.0.0-alpha.1",
+        "@ostro/session": "^2.0.0-alpha.1",
+        "@ostro/support": "^2.0.0-alpha.1",
+        "@ostro/validation": "^2.0.0-alpha.1",
+        "csrf": "3.1.0",
+        "dotenv": "10.0.0",
+        "fs-extra": "^11.4.1",
+        "lodash.get": "^4.4.2",
+        "ouch": "^2.0.0",
+        "path-to-regexp": "^8.4.2",
+        "serve-static": "^1.16.2"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "engineStrict": true,
+    "keywords": [
+        "foundation"
+    ],
+    "author": "amar",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ostrojs/foundation.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ostrojs/foundation/issues"
+    },
+    "homepage": "https://github.com/ostrojs/foundation#readme",
+    "types": "build/application.d.ts",
+    "files": [
+        "build",
+        "package.json",
+        "README.md",
+        "LICENSE"
+    ],
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "typescript": "^5.8.0"
+    }
 }

@@ -1,0 +1,18 @@
+import Command from '@ostro/console/command';
+
+class {{ class }} extends Command {
+
+    public get $signature(): string {
+        return '{{ command }}';
+    }
+
+    public get $description(): string {
+        return 'Command description';
+    }
+
+    public handle(): any {
+
+    }
+}
+
+export default {{ class }};
