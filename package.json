@@ -1,15 +1,15 @@
 {
     "name": "@ostro/foundation",
-    "version": "2.0.0-alpha.1",
+    "version": "2.0.0-alpha.2",
     "description": "Foundation for OstroJS",
     "main": "build/application.js",
     "exports": {
         ".": {
-            "types": "./build/application.d.ts",
+            "types": "./build/types/application.d.ts",
             "default": "./build/application.js"
         },
         "./*": {
-            "types": "./build/*.d.ts",
+            "types": "./build/types/*.d.ts",
             "default": "./build/*.js"
         }
     },
@@ -20,21 +20,21 @@
         "clean": "rm -rf build coverage"
     },
     "dependencies": {
-        "@ostro/auth": "^2.0.0-alpha.1",
-        "@ostro/cache": "^2.0.0-alpha.1",
-        "@ostro/config": "^2.0.0-alpha.1",
-        "@ostro/console": "^2.0.0-alpha.1",
-        "@ostro/container": "^2.0.0-alpha.1",
-        "@ostro/contracts": "^2.0.0-alpha.1",
-        "@ostro/database": "^2.0.0-alpha.1",
-        "@ostro/filesystem": "^2.0.0-alpha.1",
-        "@ostro/http": "^2.0.0-alpha.1",
-        "@ostro/logger": "^2.0.0-alpha.1",
-        "@ostro/router": "^2.0.0-alpha.1",
-        "@ostro/server": "^2.0.0-alpha.1",
-        "@ostro/session": "^2.0.0-alpha.1",
-        "@ostro/support": "^2.0.0-alpha.1",
-        "@ostro/validation": "^2.0.0-alpha.1",
+        "@ostro/auth": "^2.0.0-alpha.2",
+        "@ostro/cache": "^2.0.0-alpha.2",
+        "@ostro/config": "^2.0.0-alpha.2",
+        "@ostro/console": "^2.0.0-alpha.2",
+        "@ostro/container": "^2.0.0-alpha.2",
+        "@ostro/contracts": "^2.0.0-alpha.2",
+        "@ostro/database": "^2.0.0-alpha.2",
+        "@ostro/filesystem": "^2.0.0-alpha.2",
+        "@ostro/http": "^2.0.0-alpha.2",
+        "@ostro/logger": "^2.0.0-alpha.2",
+        "@ostro/router": "^2.0.0-alpha.2",
+        "@ostro/server": "^2.0.0-alpha.2",
+        "@ostro/session": "^2.0.0-alpha.2",
+        "@ostro/support": "^2.0.0-alpha.2",
+        "@ostro/validation": "^2.0.0-alpha.2",
         "csrf": "3.1.0",
         "dotenv": "10.0.0",
         "fs-extra": "^11.4.1",
@@ -60,7 +60,7 @@
         "url": "https://github.com/ostrojs/foundation/issues"
     },
     "homepage": "https://github.com/ostrojs/foundation#readme",
-    "types": "build/application.d.ts",
+    "types": "./build/types/application.d.ts",
     "files": [
         "build",
         "package.json",
