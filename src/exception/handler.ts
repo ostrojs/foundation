@@ -12,6 +12,16 @@ import { except } from '@ostro/support/object';
 import path from 'path';
 import fs from 'fs';
 
+function except<T extends Record<string, any>>(obj: T, keys: string[]): Partial<T> {
+    const target: Partial<T> = {};
+    for (const i in obj) {
+        if (keys && keys.indexOf(i) >= 0) continue;
+        if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+        target[i] = obj[i];
+    }
+    return target;
+}
+
 // Framework globals: app, route
 
 const kHandle: unique symbol = Symbol('handle');
