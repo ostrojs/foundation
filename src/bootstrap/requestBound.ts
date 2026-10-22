@@ -1,6 +1,7 @@
 import HttpRequest from '@ostro/http/request';
 import CoreHttpRequest from '../http/request';
-const ServerRequest: any = require("@ostro/server/request");
+import http from 'http';
+const ServerRequest: any = http.IncomingMessage;
 
 /**
  * Class RequestBound.
