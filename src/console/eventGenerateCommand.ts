@@ -1,4 +1,5 @@
 import Command from '@ostro/console/command';
+import '@ostro/support/object';
 const EventServiceProvider: any = null;
 
 /**

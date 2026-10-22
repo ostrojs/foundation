@@ -2,6 +2,7 @@ declare var public_path: any;
 import fs from 'fs';
 import MixExceptions from '@ostro/support/exceptions/mixException';
 import { isset } from '@ostro/support/function';
+import { startsWith } from '@ostro/support/string';
 
 // Framework global: public_path
 
@@ -29,11 +30,11 @@ class Mix {
      * @returns Resolved asset path
      */
     public path($path: string, $manifestDirectory: string = ''): string {
-        if (!(String as any).startsWith($path, '/')) {
+        if (!startsWith($path, '/')) {
             $path = `/${$path}`;
         }
 
-        if ($manifestDirectory && !(String as any).startsWith($manifestDirectory, '/')) {
+        if ($manifestDirectory && !startsWith($manifestDirectory, '/')) {
             $manifestDirectory = `/${$manifestDirectory}`;
         }
 

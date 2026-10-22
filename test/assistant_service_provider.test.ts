@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import AssistantServiceProvider from '../src/providers/assistantServiceProvider';
 
 describe('AssistantServiceProvider', () => {

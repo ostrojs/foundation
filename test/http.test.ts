@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import HttpRequest from '../src/http/request';
 import HttpResponse from '../src/http/response';
 import HttpContext from '../src/http/httpContext';

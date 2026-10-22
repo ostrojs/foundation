@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import Application from '../src/application';
 import ServiceProvider from '@ostro/support/serviceProvider';
 import fs = require('fs');

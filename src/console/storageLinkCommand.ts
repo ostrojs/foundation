@@ -1,5 +1,7 @@
 declare var base_path: any, is_null: any, isSymbolicLink: any, public_path: any, storage_path: any;
 import Command from '@ostro/console/command';
+import { isSymbolicLink as defaultIsSymbolicLink } from '@ostro/support/function';
+const checkSymbolicLink = (p: string) => typeof (global as any).isSymbolicLink === 'function' ? (global as any).isSymbolicLink(p) : defaultIsSymbolicLink(p);
 /**
  * Class StorageLinkCommand.
  */
@@ -45,7 +47,7 @@ class StorageLinkCommand extends Command {
                 continue;
             }
 
-            if (await isSymbolicLink($link)) {
+            if (await checkSymbolicLink($link)) {
                 await this.$file.delete($link);
             }
 
@@ -79,7 +81,7 @@ class StorageLinkCommand extends Command {
      * @returns {any}
      */
     public async isRemovableSymlink($link: any, $force: boolean) {
-        return (await isSymbolicLink($link)) && $force;
+        return (await checkSymbolicLink($link)) && $force;
     }
 }
 
