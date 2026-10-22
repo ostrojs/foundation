@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 (process as any).mainModule = (process as any).mainModule || { filename: __filename };
 import Handler from '../src/exception/handler';
 import ExceptionManager from '../src/exception/handlerManager';

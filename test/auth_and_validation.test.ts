@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import ValidatesRequests from '../src/validation/validatesRequests';
 import Authorizable from '../src/auth/access/authorizable';
 import GuardResolver from '../src/auth/guardResolver';
