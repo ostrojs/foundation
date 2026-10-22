@@ -70,7 +70,7 @@ class KeyGenerateCommand extends Command {
      * @returns Boolean indicating whether key was set
      */
     public async setKeyInEnvironmentFile(key: string): Promise<boolean> {
-        let currentKey: string = this.$app['config']['app.key'];
+        let currentKey: string = this.$app['config']['app.key'] || '';
 
         if (currentKey.length !== 0 && (!await this.confirmToProceed())) {
             return false;
@@ -97,7 +97,7 @@ class KeyGenerateCommand extends Command {
      * @returns The pattern string
      */
     public keyReplacementPattern(): string {
-        return 'APP_KEY=' + this.$app['config']['app.key'];
+        return 'APP_KEY=' + (this.$app['config']['app.key'] || '');
     }
 }
 
