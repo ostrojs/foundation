@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import ConsoleKernel from '../src/console/kernel';
 import ConsoleMakeCommand from '../src/console/consoleMakeCommand';
 import EventMakeCommand from '../src/console/eventMakeCommand';

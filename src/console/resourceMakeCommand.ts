@@ -1,6 +1,7 @@
 import path from 'path';
 import GeneratorCommand from '@ostro/console/generatorCommand';
 import { trim } from '@ostro/support/function';
+import { endsWith } from '@ostro/support/string';
 
 /**
  * Class ResourceMakeCommand.
@@ -55,7 +56,7 @@ class ResourceMakeCommand extends GeneratorCommand {
      */
     public collection(): boolean {
         return Boolean(this.option('collection') ||
-            (String as any).endsWith(this.argument('name'), 'Collection'));
+            endsWith(this.argument('name'), 'Collection'));
     }
 
     /**

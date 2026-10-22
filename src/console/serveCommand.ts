@@ -1,5 +1,6 @@
-declare var base_path: any, is_null: any, isSymbolicLink: any, public_path: any, storage_path: any;
+declare var base_path: any, isSymbolicLink: any, public_path: any, storage_path: any;
 import Command from '@ostro/console/command';
+import { is_null } from '@ostro/support/function';
 
 /**
  * Class ServeCommand.

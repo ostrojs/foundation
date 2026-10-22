@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import LocaleUpdated from '../src/events/localeUpdated';
 import Application from '../src/application';
 import HttpRequest from '../src/http/request';

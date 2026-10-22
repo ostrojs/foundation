@@ -1,6 +1,7 @@
 import path from 'path';
 import GeneratorCommand from '@ostro/console/generatorCommand';
 import { trim } from '@ostro/support/function';
+import { plural, camelCase, snakeCase } from '@ostro/support/string';
 
 // Framework global registered by OstroJS at boot time
 declare function app_path(path?: string): string;
@@ -94,7 +95,7 @@ class ModelMakeCommand extends GeneratorCommand {
      * @returns Command execution result
      */
     public createMigration(): any {
-        let table: any = (this.getFileName(this.argument('name')) as any).plural().camelCase().snakeCase();
+        let table: any = snakeCase(camelCase(plural(this.getFileName(this.argument('name')))));
 
         return this.callCommand('make:migration', {
             'name': `create_${table}_table`,

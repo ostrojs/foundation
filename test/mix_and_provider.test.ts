@@ -1,4 +1,3 @@
-import '@ostro/support/helpers';
 import Mix from '../src/mix';
 import ProviderRepository from '../src/providerRepository';
 import MixException from '@ostro/support/exceptions/mixException';
