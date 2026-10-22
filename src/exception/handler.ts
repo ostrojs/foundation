@@ -8,9 +8,18 @@ import JsonException from '@ostro/contracts/http/jsonException';
 import Redirect from '@ostro/contracts/http/redirectResponse';
 import Session from '@ostro/contracts/session/session';
 import AuthenticationException from '@ostro/auth/authenticationException';
-import { except } from '@ostro/support/object';
 import path from 'path';
 import fs from 'fs';
+
+function except<T extends Record<string, any>>(obj: T, keys: string[]): Partial<T> {
+    const target: Partial<T> = {};
+    for (const i in obj) {
+        if (keys && keys.indexOf(i) >= 0) continue;
+        if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+        target[i] = obj[i];
+    }
+    return target;
+}
 
 // Framework globals: app, route
 
