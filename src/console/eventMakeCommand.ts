@@ -21,6 +21,10 @@ class EventMakeCommand extends GeneratorCommand {
 
     public $type: string = 'Event';
 
+    public override get $dirname(): string {
+        return __dirname;
+    }
+
     /**
      * alreadyExists method.
      * @param rawName - Raw name

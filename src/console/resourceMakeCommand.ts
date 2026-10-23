@@ -22,6 +22,10 @@ class ResourceMakeCommand extends GeneratorCommand {
 
     public $type: string = 'Resource';
 
+    public override get $dirname(): string {
+        return __dirname;
+    }
+
     public get $options(): any[] {
         return [
         this.createOption('-c, --collection', 'Create a resource collection'),
