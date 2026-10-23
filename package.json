@@ -1,16 +1,16 @@
 {
     "name": "@ostro/foundation",
-    "version": "2.0.0-alpha.7",
+    "version": "2.0.0-alpha.8",
     "description": "Foundation for OstroJS",
-    "main": "build/application.js",
+    "main": "application.js",
     "exports": {
         ".": {
-            "types": "./build/types/application.d.ts",
-            "default": "./build/application.js"
+            "types": "./types/application.d.ts",
+            "default": "./application.js"
         },
         "./*": {
-            "types": "./build/types/*.d.ts",
-            "default": "./build/*.js"
+            "types": "./types/*.d.ts",
+            "default": "./*.js"
         }
     },
     "scripts": {
@@ -21,21 +21,21 @@
         "lint:check": "tsc --noEmit -p tsconfig.build.json"
     },
     "dependencies": {
-        "@ostro/auth": "^2.0.0-alpha.5",
-        "@ostro/cache": "^2.0.0-alpha.4",
-        "@ostro/config": "^2.0.0-alpha.4",
-        "@ostro/console": "^2.0.0-alpha.6",
-        "@ostro/container": "^2.0.0-alpha.5",
-        "@ostro/contracts": "^2.0.0-alpha.5",
-        "@ostro/database": "^2.0.0-alpha.9",
-        "@ostro/filesystem": "^2.0.0-alpha.5",
-        "@ostro/http": "^2.0.0-alpha.5",
-        "@ostro/logger": "^2.0.0-alpha.4",
-        "@ostro/router": "^2.0.0-alpha.6",
-        "@ostro/server": "^2.0.0-alpha.5",
-        "@ostro/session": "^2.0.0-alpha.5",
-        "@ostro/support": "^2.0.0-alpha.6",
-        "@ostro/validation": "^2.0.0-alpha.4",
+        "@ostro/auth": "^2.0.0-alpha.6",
+        "@ostro/cache": "^2.0.0-alpha.5",
+        "@ostro/config": "^2.0.0-alpha.5",
+        "@ostro/console": "^2.0.0-alpha.7",
+        "@ostro/container": "^2.0.0-alpha.6",
+        "@ostro/contracts": "^2.0.0-alpha.6",
+        "@ostro/database": "^2.0.0-alpha.10",
+        "@ostro/filesystem": "^2.0.0-alpha.6",
+        "@ostro/http": "^2.0.0-alpha.6",
+        "@ostro/logger": "^2.0.0-alpha.5",
+        "@ostro/router": "^2.0.0-alpha.7",
+        "@ostro/server": "^2.0.0-alpha.6",
+        "@ostro/session": "^2.0.0-alpha.6",
+        "@ostro/support": "^2.0.0-alpha.7",
+        "@ostro/validation": "^2.0.0-alpha.5",
         "csrf": "^3.1.0",
         "dotenv": "^16.4.7",
         "fs-extra": "^11.4.1",
@@ -60,13 +60,7 @@
         "url": "https://github.com/ostrojs/foundation/issues"
     },
     "homepage": "https://github.com/ostrojs/foundation#readme",
-    "types": "./build/types/application.d.ts",
-    "files": [
-        "build",
-        "package.json",
-        "README.md",
-        "LICENSE"
-    ],
+    "types": "types/application.d.ts",
     "devDependencies": {
         "@types/node": "^22.0.0",
         "typescript": "^5.8.0",
@@ -75,7 +69,7 @@
         "jest": "^30.5.2",
         "ts-jest": "^29.4.15",
         "ts-node": "^10.9.2",
-        "@ostro/builder": "^2.0.0-alpha.3"
+        "@ostro/builder": "^2.0.0-alpha.4"
     },
     "overrides": {
         "sprintf-js": "^1.1.3",
