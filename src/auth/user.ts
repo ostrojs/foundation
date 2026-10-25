@@ -1,5 +1,5 @@
 import Authenticatable from '@ostro/auth/authenticatable';
-import Model, { kResolver, kQuery, kEagerLoad, kModel, kScopes, kRemovedScopes, kWasRecentlyCreated, kPerformRelationQuery, kLazyQueries } from '@ostro/database/eloquent/model';
+import Model from '@ostro/database/eloquent/model';
 import Crypt from '@ostro/support/facades/crypt';
 import { implement } from '@ostro/support/function';
 
