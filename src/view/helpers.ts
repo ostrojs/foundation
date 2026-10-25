@@ -1,14 +1,11 @@
-import path from 'path';
-
-const kHttp: unique symbol = Symbol('http');
-const kApp: unique symbol = Symbol('app');
+import path from 'node:path';
 
 /**
  * Class Helpers.
  */
 class Helpers {
-    [kHttp]: any;
-    [kApp]: any;
+    #http: any;
+    #app: any;
 
     /**
      * Create a new instance.
@@ -16,18 +13,8 @@ class Helpers {
      * @param http - Http context
      */
     constructor(app: any, http: any) {
-        Object.defineProperty(this, kHttp, {
-            value: http,
-            enumerable: false,
-            configurable: false,
-            writable: false
-        });
-        Object.defineProperty(this, kApp, {
-            value: app,
-            enumerable: false,
-            configurable: false,
-            writable: false
-        });
+        this.#http = http;
+        this.#app = app;
     }
 
     /**
@@ -36,7 +23,7 @@ class Helpers {
      * @returns Full secure URL
      */
     public secure_asset($name: string, ...rest: string[]): string {
-        const domain = this[kApp].config.get('app.asset_url') || ('https://' + this[kHttp].request.get('host'));
+        const domain = this.#app.config.get('app.asset_url') || ('https://' + this.#http.request.get('host'));
         return new URL(path.join(...arguments), domain).href;
     }
 
@@ -45,7 +32,7 @@ class Helpers {
      * @returns Full URL
      */
     public asset(...args: string[]): string {
-        const domain = this[kApp].config.get('app.asset_url') || (this[kHttp].request.protocol() + '://' + this[kHttp].request.get('host'));
+        const domain = this.#app.config.get('app.asset_url') || (this.#http.request.protocol() + '://' + this.#http.request.get('host'));
         return new URL(path.join(...arguments), domain).href;
     }
 
@@ -55,7 +42,7 @@ class Helpers {
      * @returns Session value
      */
     public session(key: string): any {
-        return this[kHttp].request.session.get(key);
+        return this.#http.request.session.get(key);
     }
 
     /**
@@ -63,7 +50,7 @@ class Helpers {
      * @returns Auth object
      */
     public get auth(): any {
-        return this[kHttp].request.auth;
+        return this.#http.request.auth;
     }
 
     /**
@@ -73,7 +60,7 @@ class Helpers {
      * @returns Old input value
      */
     public old(key: string, defaultValue?: any): any {
-        return this[kHttp].request.old(key, defaultValue);
+        return this.#http.request.old(key, defaultValue);
     }
 
     /**
@@ -81,7 +68,7 @@ class Helpers {
      * @returns CSRF token
      */
     public csrfToken(): string {
-        return this[kHttp].csrfToken();
+        return this.#http.csrfToken();
     }
 
     /**
@@ -97,7 +84,7 @@ class Helpers {
      * @returns Error bag
      */
     public get error(): any {
-        return this[kHttp].request.error();
+        return this.#http.request.error();
     }
 
     /**
@@ -105,7 +92,7 @@ class Helpers {
      * @returns Route URL
      */
     public route(...args: any[]): any {
-        return this[kApp]['router'].route(...arguments);
+        return this.#app['router'].route(...arguments);
     }
 
     /**
@@ -114,7 +101,7 @@ class Helpers {
      * @returns Mix resolved path
      */
     public mix(filePath: string): string {
-        return this[kApp].mix.path(filePath);
+        return this.#app.mix.path(filePath);
     }
 
     /**
@@ -122,7 +109,7 @@ class Helpers {
      * @returns Absolute path
      */
     public absolutePath(): string {
-        return this[kApp].config.get('app.url', '') + this[kHttp].request.path();
+        return this.#app.config.get('app.url', '') + this.#http.request.path();
     }
 }
 

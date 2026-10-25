@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import path from 'path';
+import path from 'node:path';
 import KernelContract from '@ostro/contracts/console/kernel';
 import Assistant from '@ostro/console/application';
 
@@ -66,7 +66,7 @@ class Kernel extends KernelContract {
      */
     public getAssistant() {
         if (!this.assistant) {
-            return this.assistant = (new (Assistant as any)(this.$app, this.$app.version()))
+            return this.assistant = new Assistant(this.$app)
                 .resolveCommands(this.$commands);
         }
 

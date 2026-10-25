@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 /**
  * Class Production.
@@ -27,9 +27,9 @@ class Production {
                 message: $exception.message || 'Whoops look like somthing wrong'
             }, ($exception.statusCode || 500));
         } else {
-            return fs.readFile(path.join(__dirname, '../template/errors/500'), { encoding: 'utf8' }, function (error: any, data: any) {
+            fs.readFile(path.join(__dirname, '../template/errors/500'), { encoding: 'utf8' }, function (error: any, data: any) {
                 response.send(data, 500);
-            }) as any;
+            });
         }
     }
 }

@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, afterAll, jest } from "@jest/globals";
 import LocaleUpdated from '../src/events/localeUpdated';
 import Application from '../src/application';
 import HttpRequest from '../src/http/request';
@@ -7,8 +8,8 @@ import ViewHelpers from '../src/view/helpers';
 import WhoopsHandler from '../src/exception/handlers/whoops';
 import ProductionHandler from '../src/exception/handlers/production';
 import JsonHandler from '../src/exception/handlers/json';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 
 describe('Foundation Comprehensive Integration and Edge-Case Tests', () => {
     let originalCwd: string;
@@ -42,7 +43,7 @@ describe('Foundation Comprehensive Integration and Edge-Case Tests', () => {
         const mockRouter = {
             currentRoute: jest.fn().mockReturnValue(mockRoute)
         };
-        (global as any).app = (k: string) => (k === 'router' ? mockRouter : null);
+        (global as unknown as { app: (k: string) => unknown }).app = (k: string) => (k === 'router' ? mockRouter : null);
 
         expect(req.routeIs('admin.*')).toBe(true);
         expect(req.routeIs('admin.users.*')).toBe(true);
@@ -162,14 +163,15 @@ describe('Foundation Comprehensive Integration and Edge-Case Tests', () => {
         };
 
         // 1. Whoops Handler
-        const whoops = new WhoopsHandler();
         const ouchMock = {
             handleException: jest.fn()
         };
-        (whoops as any)[Object.getOwnPropertySymbols(whoops)[0]] = ouchMock;
-        whoops.render(mockReq, mockRes, error);
+        const spy = jest.spyOn(WhoopsHandler.prototype, 'register').mockReturnValue(ouchMock);
+        const testWhoops = new WhoopsHandler();
+        testWhoops.render(mockReq, mockRes, error);
         expect(mockRes.writeHead).toHaveBeenCalledWith(500, { 'Content-Type': 'text/html' });
         expect(ouchMock.handleException).toHaveBeenCalled();
+        spy.mockRestore();
 
         // 2. Production Handler (wantJson = true)
         const prod = new ProductionHandler();
@@ -181,18 +183,19 @@ describe('Foundation Comprehensive Integration and Edge-Case Tests', () => {
         );
 
         // 3. Json Handler
-        const jsonHandler = new JsonHandler();
         const jsonOuchMock = {
-            handleException: jest.fn((err, req, res, cb) => {
+            handleException: jest.fn((err: any, req: any, res: any, cb: any) => {
                 cb(JSON.stringify({ error: { type: 'Error', message: 'Test error', line: 1 } }));
             })
         };
-        (jsonHandler as any)[Object.getOwnPropertySymbols(jsonHandler)[0]] = jsonOuchMock;
-        jsonHandler.render(mockReq, mockRes, error);
+        const jsonSpy = jest.spyOn(JsonHandler.prototype, 'register').mockReturnValue(jsonOuchMock);
+        const testJsonHandler = new JsonHandler();
+        testJsonHandler.render(mockReq, mockRes, error);
         expect(mockRes.json).toHaveBeenCalledWith(
             expect.objectContaining({ name: 'Error', message: 'Test error' }),
             500
         );
+        jsonSpy.mockRestore();
     });
 
     test('Application service provider and path getters under various conditions', () => {

@@ -1,12 +1,10 @@
 declare var public_path: any;
-import fs from 'fs';
+import fs from 'node:fs';
 import MixExceptions from '@ostro/support/exceptions/mixException';
 import { isset } from '@ostro/support/function';
 import { startsWith } from '@ostro/support/string';
 
 // Framework global: public_path
-
-const kManifest: unique symbol = Symbol('manifest');
 
 /**
  * Class Mix.
@@ -47,7 +45,7 @@ class Mix {
                     throw new MixExceptions('The Mix manifest does not exist.');
                 }
 
-                this.$manifests[$manifestPath] = JSON.parse(fs.readFileSync($manifestPath) as any);
+                this.$manifests[$manifestPath] = JSON.parse(fs.readFileSync($manifestPath, "utf8"));
             } catch (e) {
                 throw new MixExceptions('The Mix manifest does not exist.');
             }

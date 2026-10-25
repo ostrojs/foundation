@@ -1,4 +1,4 @@
-import Crypto from 'crypto';
+import Crypto from 'node:crypto';
 import Command from '@ostro/console/command';
 
 /**

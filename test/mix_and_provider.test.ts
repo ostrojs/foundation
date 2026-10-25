@@ -1,8 +1,9 @@
+import { describe, test, expect, jest } from "@jest/globals";
 import Mix from '../src/mix';
 import ProviderRepository from '../src/providerRepository';
 import MixException from '@ostro/support/exceptions/mixException';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 describe('Mix and ProviderRepository', () => {
     test('Mix handles paths, manifests, and missing files', () => {
@@ -14,7 +15,7 @@ describe('Mix and ProviderRepository', () => {
             '/css/app.css': '/css/app.css?id=456'
         }));
 
-        (global as any).public_path = (p: string) => path.join(tmpPublic, p);
+        (global as unknown as { public_path: (p?: string) => string }).public_path = (p: string) => path.join(tmpPublic, p);
 
         const appMock: any = {
             instance: jest.fn().mockReturnValue({
@@ -38,17 +39,17 @@ describe('Mix and ProviderRepository', () => {
 
         // Missing manifest exception
         const nonExistentDir = path.join(__dirname, 'non_existent_dir');
-        (global as any).public_path = (p: string) => path.join(nonExistentDir, p);
+        (global as unknown as { public_path: (p?: string) => string }).public_path = (p: string) => path.join(nonExistentDir, p);
         expect(() => mix.path('/js/missing.js')).toThrow(MixException);
 
         // File exists but is directory -> throw
         const fakeFileDir = path.join(tmpPublic, 'dir-manifest');
         fs.mkdirSync(fakeFileDir, { recursive: true });
-        (global as any).public_path = () => fakeFileDir;
+        (global as unknown as { public_path: (p?: string) => string }).public_path = () => fakeFileDir;
         expect(() => mix.path('/js/app.js')).toThrow(MixException);
 
         // Missing file in manifest in debug mode -> throw
-        (global as any).public_path = (p: string) => path.join(tmpPublic, p);
+        (global as unknown as { public_path: (p?: string) => string }).public_path = (p: string) => path.join(tmpPublic, p);
         const mix2 = new Mix(appMock);
         expect(() => mix2.path('/js/unlisted.js')).toThrow(MixException);
 
@@ -66,7 +67,7 @@ describe('Mix and ProviderRepository', () => {
         fs.writeFileSync(path.join(subManifestDir, 'mix-manifest.json'), JSON.stringify({
             '/app.js': '/app.js?v=2'
         }));
-        (global as any).public_path = (p: string) => path.join(tmpPublic, p);
+        (global as unknown as { public_path: (p?: string) => string }).public_path = (p: string) => path.join(tmpPublic, p);
         expect(mix2.path('/app.js', 'build')).toBe('https://cdn.example.com/build/app.js?v=2');
         expect(mix2.path('/app.js', '/build')).toBe('https://cdn.example.com/build/app.js?v=2');
 

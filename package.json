@@ -1,41 +1,41 @@
 {
     "name": "@ostro/foundation",
-    "version": "2.0.0-alpha.11",
+    "version": "2.0.0-alpha.4",
     "description": "Foundation for OstroJS",
     "main": "application.js",
     "exports": {
         ".": {
-            "types": "./.types/application.d.ts",
+            "types": "./.typed/application.d.ts",
             "default": "./application.js"
         },
         "./*": {
-            "types": "./.types/*.d.ts",
+            "types": "./.typed/*.d.ts",
             "default": "./*.js"
         }
     },
     "scripts": {
-        "test": "npx c8 npx jest",
-        "build": "npm run lint:check && rm -rf build && npx tsc -p tsconfig.build.json && node -e \"const fs=require(\\\"fs\\\"); if(fs.existsSync(\\\"src/exception/template\\\"))fs.cpSync(\\\"src/exception/template\\\",\\\"build/exception/template\\\",{recursive:true}); if(fs.existsSync(\\\"src/console/stubs\\\"))fs.cpSync(\\\"src/console/stubs\\\",\\\"build/console/stubs\\\",{recursive:true});\" && node scripts/build.js",
+        "test": "jest",
+        "build": "npm run lint:check && rm -rf build && ostro-build --prepare",
         "prepublishOnly": "npm run build",
         "clean": "rm -rf build coverage",
-        "lint:check": "tsc --noEmit -p tsconfig.build.json"
+        "lint:check": "tsc --noEmit"
     },
     "dependencies": {
-        "@ostro/auth": "^2.0.0-alpha.9",
-        "@ostro/cache": "^2.0.0-alpha.8",
-        "@ostro/config": "^2.0.0-alpha.8",
-        "@ostro/console": "^2.0.0-alpha.10",
-        "@ostro/container": "^2.0.0-alpha.9",
-        "@ostro/contracts": "^2.0.0-alpha.9",
-        "@ostro/database": "^2.0.0-alpha.13",
-        "@ostro/filesystem": "^2.0.0-alpha.9",
-        "@ostro/http": "^2.0.0-alpha.9",
-        "@ostro/logger": "^2.0.0-alpha.8",
-        "@ostro/router": "^2.0.0-alpha.10",
-        "@ostro/server": "^2.0.0-alpha.9",
-        "@ostro/session": "^2.0.0-alpha.9",
-        "@ostro/support": "^2.0.0-alpha.10",
-        "@ostro/validation": "^2.0.0-alpha.8",
+        "@ostro/auth": "^2.0.0-alpha.4",
+        "@ostro/cache": "^2.0.0-alpha.3",
+        "@ostro/config": "^2.0.0-alpha.3",
+        "@ostro/console": "^2.0.0-alpha.3",
+        "@ostro/container": "^2.0.0-alpha.3",
+        "@ostro/contracts": "^2.0.0-alpha.3",
+        "@ostro/database": "^2.0.0-alpha.6",
+        "@ostro/filesystem": "^2.0.0-alpha.3",
+        "@ostro/http": "^2.0.0-alpha.3",
+        "@ostro/logger": "^2.0.0-alpha.3",
+        "@ostro/router": "^2.0.0-alpha.4",
+        "@ostro/server": "^2.0.0-alpha.3",
+        "@ostro/session": "^2.0.0-alpha.3",
+        "@ostro/support": "^2.0.0-alpha.3",
+        "@ostro/validation": "^2.0.0-alpha.3",
         "csrf": "^3.1.0",
         "dotenv": "^16.4.7",
         "fs-extra": "^11.4.1",
@@ -60,9 +60,9 @@
         "url": "https://github.com/ostrojs/foundation/issues"
     },
     "homepage": "https://github.com/ostrojs/foundation#readme",
-    "types": ".types/application.d.ts",
+    "types": ".typed/application.d.ts",
     "devDependencies": {
-        "@ostro/builder": "^2.0.0-alpha.7",
+        "@ostro/builder": "^2.0.0-alpha.1",
         "@types/jest": "^30.0.0",
         "@types/node": "^22.0.0",
         "c8": "^10.1.3",

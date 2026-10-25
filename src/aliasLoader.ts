@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 /**
  * Class AliasLoader.
@@ -28,10 +28,14 @@ class AliasLoader {
                 } else if (targetPath.startsWith('./')) {
                     targetPath = path.resolve(targetPath);
                 }
-                const mod = require(targetPath);
-                target = (mod && mod.__esModule && mod.default) ? mod.default : mod;
+                if (path.resolve(targetPath) === path.resolve(__filename)) {
+                    target = AliasLoader;
+                } else {
+                    const mod = require(targetPath);
+                    target = (mod && mod.__esModule && mod.default) ? mod.default : mod;
+                }
             }
-            (global as any)[aliasKey] = target;
+            (global as typeof globalThis)[aliasKey] = target;
         }
     }
 }

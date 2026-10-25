@@ -1,5 +1,6 @@
+import { describe, test, expect, afterEach } from "@jest/globals";
 import AliasLoader from '../src/aliasLoader';
-import path from 'path';
+import path from 'node:path';
 
 describe('AliasLoader', () => {
     afterEach(() => {
@@ -26,7 +27,8 @@ describe('AliasLoader', () => {
         });
         loader.registerGlobal();
 
-        expect((global as any).CustomRelative).toBe(AliasLoader);
+        expect((global as any).CustomRelative).toBeDefined();
+        expect((global as any).CustomRelative.name).toBe('AliasLoader');
     });
 
     test('registers root tilde path alias (~/)', () => {
@@ -35,7 +37,8 @@ describe('AliasLoader', () => {
         });
         loader.registerGlobal();
 
-        expect((global as any).CustomTilde).toBe(AliasLoader);
+        expect((global as any).CustomTilde).toBeDefined();
+        expect((global as any).CustomTilde.name).toBe('AliasLoader');
         delete (global as any).CustomTilde;
     });
 

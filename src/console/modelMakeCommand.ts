@@ -1,6 +1,5 @@
-import path from 'path';
+import path from 'node:path';
 import GeneratorCommand from '@ostro/console/generatorCommand';
-import { trim } from '@ostro/support/function';
 import { plural, camelCase, snakeCase } from '@ostro/support/string';
 
 // Framework global registered by OstroJS at boot time

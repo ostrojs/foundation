@@ -1,3 +1,4 @@
+import { describe, test, expect } from "@jest/globals";
 import AssistantServiceProvider from '../src/providers/assistantServiceProvider';
 
 describe('AssistantServiceProvider', () => {

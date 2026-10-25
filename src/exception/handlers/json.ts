@@ -1,18 +1,16 @@
 import Ouch from 'ouch';
 
-const kHandler: unique symbol = Symbol('handler');
-
 /**
  * Class Json.
  */
 class Json {
-    private [kHandler]: any;
+    #handler: any;
 
     /**
      * Create a new instance.
      */
     constructor() {
-        this[kHandler] = this.register();
+        this.#handler = this.register();
     }
 
     /**
@@ -20,7 +18,11 @@ class Json {
      * @returns Ouch handler instance
      */
     public register(): any {
-        return (new (Ouch as any)([new (Ouch as any).handlers.JsonResponseHandler(false, true, false)]));
+        const OuchConstructor = Ouch as {
+            new (handlers: unknown[]): unknown;
+            handlers: { JsonResponseHandler: new (trace: boolean, verbose: boolean, debug: boolean) => unknown };
+        };
+        return new OuchConstructor([new OuchConstructor.handlers.JsonResponseHandler(false, true, false)]);
     }
 
     /**
@@ -30,7 +32,7 @@ class Json {
      * @param $exception - Exception object
      */
     public render(request: any, response: any, $exception: Record<string, any> = {}): void {
-        this[kHandler].handleException($exception, null, null, function (exception: any) {
+        this.#handler.handleException($exception, null, null, function (exception: any) {
             const parsedObj = JSON.parse(exception).error || {};
             response.json({
                 name: parsedObj.type,

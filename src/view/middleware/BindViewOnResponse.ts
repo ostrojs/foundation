@@ -12,7 +12,7 @@ class BindView {
      * @param next - Next middleware callback
      */
     public handle(http: any, next: Function): void {
-        http.response.view = new (View as any)(this.$app, http, next);
+        http.response.view = new View(this.$app, http, next);
         next();
     }
 }

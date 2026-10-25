@@ -2,7 +2,7 @@ import JsonResourceCollection from '@ostro/http/resources/json/resourceCollectio
 
 class {{ class }} extends JsonResourceCollection {
 
-    public static toObject(data: any): any {
+    public static toObject(data: object): object {
         return data;
     }
 
