@@ -3,8 +3,6 @@ import HttpContext from './httpContext';
 import ExceptionHandlerMiddleware from '../exception/middleware/exceptionHandler';
 import BindViewOnResponse from '../view/middleware/BindViewOnResponse';
 
-const kCachedMiddleware: unique symbol = Symbol('cachedMiddleware');
-
 /**
  * Class Kernel.
  */
@@ -110,7 +108,7 @@ class Kernel extends KernelContract {
      * PrepareRouter method.
      */
     public PrepareRouter(): void {
-        (HttpContext.prototype as any).$app = this.$app;
+        (HttpContext.prototype as { $app: unknown }).$app = this.$app;
         this.$router.httpContextHandler(HttpContext);
     }
 

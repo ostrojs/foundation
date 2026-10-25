@@ -1,8 +1,6 @@
 import Response from '@ostro/http/response';
-import Model from '@ostro/contracts/database/eloquent/model';
-import Collection from '@ostro/contracts/collection/collect';
-import GenericUser from '@ostro/contracts/auth/genericUser';
-
+import Model, { type IModel } from '@ostro/contracts/database/eloquent/model';
+import Collection, { type ICollection } from '@ostro/contracts/collection/collect';
 /**
  * Class HttpResponse.
  */
@@ -13,13 +11,17 @@ class HttpResponse extends Response {
      * @param body - Response body
      * @param status - HTTP status code
      */
-    public override send(body: any, status: number = 200): any {
+    public override send(body: any, status?: number): any {
         if (body instanceof Model) {
-            body = (body as any).serialize();
-        } else if (body instanceof Collection && (body as any).isArray()) {
-            body = (body as any).toArray();
-        } else if (body instanceof Collection && (body as any).isJson()) {
-            body = (body as any).toJSON();
+            const model = body as IModel;
+            body = model.serialize ? model.serialize() : body;
+        } else if (body instanceof Collection) {
+            const col = body as ICollection;
+            if (typeof col.isArray === 'function' && col.isArray()) {
+                body = col.toArray();
+            } else if (typeof col.isJson === 'function' && col.isJson()) {
+                body = col.toJSON();
+            }
         }
         super.send(body, status);
     }

@@ -1,6 +1,6 @@
 import HttpRequest from '@ostro/http/request';
 import CoreHttpRequest from '../http/request';
-import http from 'http';
+import http from 'node:http';
 const ServerRequest: any = http.IncomingMessage;
 
 /**

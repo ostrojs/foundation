@@ -1,4 +1,6 @@
-(process as any).mainModule = (process as any).mainModule || { filename: __filename };
+const proc = process as unknown as { mainModule?: { filename: string } };
+proc.mainModule = proc.mainModule || { filename: __filename };
+import { describe, test, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import Handler from '../src/exception/handler';
 import ExceptionManager from '../src/exception/handlerManager';
 import ExceptionMiddleware from '../src/exception/middleware/exceptionHandler';
@@ -15,8 +17,8 @@ import Redirect from '@ostro/contracts/http/redirectResponse';
 import AuthenticationException from '@ostro/auth/authenticationException';
 import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
 import SessionContract from '@ostro/contracts/session/session';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 describe('Exception handling system', () => {
     let appMock;
@@ -441,13 +443,16 @@ describe("Handlers 100% branch coverage", () => {
     });
 
     test("JsonHandler empty error and parsedObj fallback", () => {
-        const jsonHandler = new JsonHandler();
-        const sym = Object.getOwnPropertySymbols(jsonHandler)[0];
-        jsonHandler[sym] = {
-            handleException: (e, req, res, cb) => {
-                cb(JSON.stringify({}));
+        class MockJsonHandler extends JsonHandler {
+            public register() {
+                return {
+                    handleException: (_e: unknown, _req: unknown, _res: unknown, cb: (data: string) => void) => {
+                        cb(JSON.stringify({}));
+                    }
+                };
             }
-        };
+        }
+        const jsonHandler = new MockJsonHandler();
         const resMock = { json: jest.fn() };
         jsonHandler.render({}, resMock);
         expect(resMock.json).toHaveBeenCalledWith({
@@ -461,11 +466,14 @@ describe("Handlers 100% branch coverage", () => {
     });
 
     test("WhoopsHandler default $exception", () => {
-        const whoopsHandler = new WhoopsHandler();
-        const sym = Object.getOwnPropertySymbols(whoopsHandler)[0];
-        whoopsHandler[sym] = {
-            handleException: jest.fn()
-        };
+        class MockWhoopsHandler extends WhoopsHandler {
+            public register() {
+                return {
+                    handleException: jest.fn()
+                };
+            }
+        }
+        const whoopsHandler = new MockWhoopsHandler();
         const writeHead = jest.fn();
         const resMock = {
             headersSent: false,

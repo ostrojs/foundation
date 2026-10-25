@@ -1,5 +1,4 @@
 import AggregateServiceProvider from '@ostro/support/aggregateServiceProvider';
-import Http from '@ostro/http/httpContext';
 import Request from '@ostro/http/request';
 import FileRequest from '@ostro/http/file';
 

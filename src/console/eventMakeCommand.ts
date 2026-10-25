@@ -1,7 +1,5 @@
-import path from 'path';
+import path from 'node:path';
 import GeneratorCommand from '@ostro/console/generatorCommand';
-import { trim } from '@ostro/support/function';
-
 /**
  * Class EventMakeCommand.
  */
@@ -20,6 +18,10 @@ class EventMakeCommand extends GeneratorCommand {
     }
 
     public $type: string = 'Event';
+
+    public override get $dirname(): string {
+        return __dirname;
+    }
 
     /**
      * alreadyExists method.

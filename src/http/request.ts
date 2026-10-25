@@ -5,13 +5,11 @@ import Request from '@ostro/http/request';
 
 // Framework global: app
 
-const kErrors: unique symbol = Symbol('errors');
-
 /**
  * Class HttpRequest.
  */
 class HttpRequest extends Request {
-    [kErrors]: any;
+    #errors: any = null;
 
     /**
      * old method.
@@ -30,11 +28,11 @@ class HttpRequest extends Request {
      * @returns Error bag or first error for key
      */
     public error(key?: string, defaultValue: any = null): any {
-        this[kErrors] = this[kErrors] || new ErrorBag((this.session ? this.session.get('__errors') : {}));
+        this.#errors = this.#errors || new ErrorBag((this.session ? this.session.get('__errors') : {}));
         if (key) {
-            return this[kErrors].first(key);
+            return this.#errors.first(key);
         }
-        return this[kErrors];
+        return this.#errors;
     }
 
     /**

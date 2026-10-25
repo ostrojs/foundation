@@ -36,12 +36,50 @@ class ServerlessBootstrapCommand extends Command {
     }
 
     /**
+     * Determine if the application is using TypeScript.
+     *
+     * @returns {boolean}
+     */
+    public isTypeScript(): boolean {
+        if (!this.$app) {
+            return false;
+        }
+        try {
+            if (this.$app['config']) {
+                const configVal = typeof this.$app['config'].get === 'function' ?
+                    this.$app['config'].get('app.typescript') :
+                    this.$app['config']['app.typescript'];
+                if (typeof configVal === 'boolean') {
+                    return configVal;
+                }
+            }
+        } catch (_) {}
+
+        if (typeof super.isTypeScript === 'function') {
+            return super.isTypeScript();
+        }
+
+        if (typeof this.$app.basePath !== 'function') {
+            return false;
+        }
+        try {
+            const fs = require('node:fs');
+            return fs.existsSync(this.$app.basePath('tsconfig.json')) ||
+                fs.existsSync(this.$app.basePath('tsconfig.build.json')) ||
+                fs.existsSync(this.$app.basePath('app.ts'));
+        } catch {
+            return false;
+        }
+    }
+
+    /**
      * handle method.
      * @async
      * @returns {any}
      */
     public async handle() {
-        const serverlessFile = this.$app.basePath('serverless.js');
+        const ext = this.isTypeScript() ? '.ts' : '.js';
+        const serverlessFile = this.$app.basePath(`serverless${ext}`);
         if (await this.$file.exists(serverlessFile)) {
             if (!this.option('force')) {
                 this.error('Serverless is already active. Use --force to overwrite.');
@@ -51,7 +89,7 @@ class ServerlessBootstrapCommand extends Command {
         try {
             await this.configureRootApp();
             // await this.removeServerlessFile();
-        } catch (error) {
+        } catch (error: any) {
             this.error(`Error during serverless bootstrap: ${error.message}`);
             return;
         }
@@ -63,7 +101,8 @@ class ServerlessBootstrapCommand extends Command {
      * @returns {any}
      */
     public async configureRootApp() {
-        const rootApp = this.$app.basePath("app.js");
+        const ext = this.isTypeScript() ? '.ts' : '.js';
+        const rootApp = this.$app.basePath(`app${ext}`);
         let content = await this.$file.get(rootApp);
 
         // Replace server.type('serverless') with server.type('server')
@@ -83,10 +122,11 @@ class ServerlessBootstrapCommand extends Command {
         );
 
         // Add server.register(kernel.handle()) before server.start() if not present
-        if (!/server\.register\(\s*kernel\.handle\(\)\s*\)/.test(content)) {
+        if (!/server\.register\(\s*kernel\.handle\(/.test(content)) {
+            const registerCall = ext === '.ts' ? "server.register(kernel.handle({}));\n\n$1" : "server.register(kernel.handle());\n\n$1";
             content = content.replace(
                 /(server\.start\s*\(\s*)/,
-                "server.register(kernel.handle());\n\n$1"
+                registerCall
             );
         }
 
@@ -98,7 +138,8 @@ class ServerlessBootstrapCommand extends Command {
      * @returns {any}
      */
     public async removeServerlessFile() {
-        const fullPath = this.$app.basePath("serverless.js");
+        const ext = this.isTypeScript() ? '.ts' : '.js';
+        const fullPath = this.$app.basePath(`serverless${ext}`);
         await this.$file.delete(fullPath);
 
     }

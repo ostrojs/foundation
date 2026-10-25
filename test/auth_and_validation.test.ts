@@ -1,3 +1,4 @@
+import { describe, test, expect, jest } from "@jest/globals";
 import ValidatesRequests from '../src/validation/validatesRequests';
 import Authorizable from '../src/auth/access/authorizable';
 import GuardResolver from '../src/auth/guardResolver';
@@ -6,7 +7,6 @@ import ConsoleSupportServiceProvider from '../src/support/providers/consoleSuppo
 import RouteServiceProvider from '../src/providers/routeServiceProvider';
 import FoundationServiceProvider from '../src/providers/foundationServiceProvider';
 import Request from '@ostro/http/request';
-import FileRequest from '@ostro/http/file';
 import Facade from '@ostro/support/facades/facade';
 
 describe('Auth, Validation, and Providers', () => {
@@ -31,7 +31,7 @@ describe('Auth, Validation, and Providers', () => {
                 return Promise.resolve(data);
             })
         };
-        (global as any).app = jest.fn((k) => {
+        (global as unknown as { app: unknown }).app = jest.fn((k) => {
             if (k === "validation") return mockValidator;
             return null;
         });

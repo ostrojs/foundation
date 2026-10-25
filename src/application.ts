@@ -2,11 +2,12 @@ import Container from '@ostro/container';
 import Filesystem from '@ostro/filesystem/filesystem';
 import ProviderRepository from './providerRepository';
 import Env from '@ostro/support/env';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import Mix from './mix';
 import LocaleUpdated from './events/localeUpdated';
-import worker_threads from 'worker_threads';
+import worker_threads from 'node:worker_threads';
+import type { IConfig } from '@ostro/contracts/config/repository';
 /**
  * Class Application.
  */
@@ -120,7 +121,7 @@ class Application extends Container {
      */
     public registerConfiguredProviders() {
         let $providers = this.config['app.providers'];
-        (new (ProviderRepository as any)(this, new Filesystem, this.getCachedServicesPath()))
+        (new ProviderRepository(this, new Filesystem))
             .load($providers);
 
     }
@@ -215,7 +216,7 @@ class Application extends Container {
      * @returns {any}
      */
     public boot() {
-        let app = ((this as any).instance("config") as any).get("app")
+        let app = this.make<IConfig>('config')?.get<Record<string, any>>('app') || {};
         process.env.TZ = app.timezone
         process.env.NODE_ENV = app.env
         this._bootingCallbacks.forEach(callback => callback(this));

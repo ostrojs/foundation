@@ -32,7 +32,7 @@ class ServeStatic {
      * @param next - Next middleware callback
      */
     public handle({ request, response }: Record<string, any>, next: Function): void {
-        serveStatic(this.$publicPath, { ...this.$defaultOptions, ...this.$options })(request, response, next as any);
+        serveStatic(this.$publicPath, { ...this.$defaultOptions, ...this.$options })(request, response, next as (err?: unknown) => void);
     }
 }
 

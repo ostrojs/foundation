@@ -1,6 +1,5 @@
-import path from 'path';
+import path from 'node:path';
 import GeneratorCommand from '@ostro/console/generatorCommand';
-import { trim } from '@ostro/support/function';
 import { endsWith } from '@ostro/support/string';
 
 /**
@@ -21,6 +20,10 @@ class ResourceMakeCommand extends GeneratorCommand {
     }
 
     public $type: string = 'Resource';
+
+    public override get $dirname(): string {
+        return __dirname;
+    }
 
     public get $options(): any[] {
         return [

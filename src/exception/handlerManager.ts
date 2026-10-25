@@ -5,19 +5,14 @@ import WhoopsHandler from './handlers/whoops';
 import ProductionHandler from './handlers/production';
 import JsonHandler from './handlers/json';
 
-const kApp: unique symbol = Symbol('app');
-const kHandlers: unique symbol = Symbol('handlers');
-const kCustomHandlers: unique symbol = Symbol('customHandlers');
-const kHandlerAdapter: unique symbol = Symbol('handlerAdapter');
-
 /**
  * Class ExceptionManager.
  */
 class ExceptionManager extends Macroable {
     public declare $app: any;
-    public [kHandlerAdapter]: any;
-    public [kHandlers]: Record<string, any>;
-    public [kCustomHandlers]: Record<string, any>;
+    #handlerAdapter: any;
+    #handlers: Record<string, any> = Object.create(null);
+    #customHandlers: Record<string, any> = Object.create(null);
 
     /**
      * Create a new instance.
@@ -25,20 +20,7 @@ class ExceptionManager extends Macroable {
      */
     constructor(handler: Function) {
         super();
-        Object.defineProperties(this, {
-            [kHandlerAdapter]: {
-                value: handler,
-                writable: true,
-            },
-            [kHandlers]: {
-                value: Object.create(null),
-                writable: true,
-            },
-            [kCustomHandlers]: {
-                value: Object.create(null),
-                writable: true,
-            },
-        });
+        this.#handlerAdapter = handler;
     }
 
     /**
@@ -49,7 +31,7 @@ class ExceptionManager extends Macroable {
     public handler(name: string = 'whoops'): any {
         name = (this.getConfig('app.debug') === false) ? 'production' : name;
 
-        return this[kHandlers][name] = this.get(name);
+        return this.#handlers[name] = this.get(name);
     }
 
     /**
@@ -58,7 +40,7 @@ class ExceptionManager extends Macroable {
      * @returns Handler instance
      */
     public get(name: string): any {
-        return this[kHandlers][name] || this.resolve(name);
+        return this.#handlers[name] || this.resolve(name);
     }
 
     /**
@@ -68,10 +50,10 @@ class ExceptionManager extends Macroable {
      */
     public resolve(name: string): any {
         const driverMethod = 'create' + ucfirst(name) + 'Handler';
-        if (this[kCustomHandlers][name]) {
+        if (this.#customHandlers[name]) {
             return this.callCustomHandler(name);
-        } else if (typeof (ExceptionManager.prototype as any)[driverMethod] === 'function') {
-            return (this as any)[driverMethod]();
+        } else if (typeof (ExceptionManager.prototype as Record<string, unknown>)[driverMethod] === 'function') {
+            return ((this as Record<string, () => unknown>)[driverMethod])();
         } else {
             throw new Error(`Handler [{${name}}] do not supported.`);
         }
@@ -83,7 +65,7 @@ class ExceptionManager extends Macroable {
      * @returns Adapted handler
      */
     public callCustomHandler(name: string): any {
-        const driver = this[kCustomHandlers][name]();
+        const driver = this.#customHandlers[name]();
         return this.adapt(driver);
     }
 
@@ -118,10 +100,10 @@ class ExceptionManager extends Macroable {
      * @returns Adapted handler
      */
     public adapt(handler: any): any {
-        if (typeof this[kHandlerAdapter] !== 'function') {
+        if (typeof this.#handlerAdapter !== 'function') {
             throw new InvalidArgumentException('Invalid handler class on exception');
         }
-        return new this[kHandlerAdapter](handler);
+        return new this.#handlerAdapter(handler);
     }
 
     /**
@@ -138,7 +120,7 @@ class ExceptionManager extends Macroable {
      * @param handler - Handler adapter constructor
      */
     public setHandlerAdapter(handler: Function): void {
-        this[kHandlerAdapter] = handler;
+        this.#handlerAdapter = handler;
     }
 
     /**
@@ -148,7 +130,7 @@ class ExceptionManager extends Macroable {
      * @returns this
      */
     public extend($driver: string, $callback: Function): this {
-        this[kCustomHandlers][$driver] = $callback.bind(this, this);
+        this.#customHandlers[$driver] = $callback.bind(this, this);
         return this;
     }
 

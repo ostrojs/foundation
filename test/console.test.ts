@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach, jest } from "@jest/globals";
 import ConsoleKernel from '../src/console/kernel';
 import ConsoleMakeCommand from '../src/console/consoleMakeCommand';
 import EventMakeCommand from '../src/console/eventMakeCommand';
@@ -9,8 +10,8 @@ import ServeCommand from '../src/console/serveCommand';
 import ServerBootstrapCommand from '../src/console/serverBootstrapCommand';
 import ServerlessBootstrapCommand from '../src/console/serverlessBootstrapCommand';
 import StorageLinkCommand from '../src/console/storageLinkCommand';
-import fs = require('fs');
-import path = require('path');
+import fs = require('node:fs');
+import path = require('node:path');
 
 describe('Console Kernel and Commands', () => {
     let tmpDir;

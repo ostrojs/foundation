@@ -22,6 +22,7 @@ import WipeCommand from '@ostro/database/console/wipeCommand';
  * Class AssistantServiceProvider.
  */
 class AssistantServiceProvider extends ServiceProvider {
+    [key: string]: any;
     public $commands: Record<string, string> = {
         'DbQuery': 'command.db.query',
         'KeyGenerate': 'command.key.generate',
@@ -61,10 +62,11 @@ class AssistantServiceProvider extends ServiceProvider {
      */
     public registerCommands($commands: Record<string, any> = {}): void {
         for (const $command of Object.keys($commands)) {
-            if (typeof (this as any)[`register${$command}Command`] !== 'function') {
+            const methodName = `register${$command}Command`;
+            if (typeof this[methodName] !== 'function') {
                 throw new Error(`register${$command}Command not available.`);
             }
-            (this as any)[`register${$command}Command`]();
+            this[methodName]();
         }
 
         this.commands(Object.values($commands));
@@ -75,8 +77,7 @@ class AssistantServiceProvider extends ServiceProvider {
      */
     public registerDbQueryCommand(): void {
         this.$app.singleton('command.db.query', function ($app: any) {
-            const $table = $app['config']['database.table'];
-            return new (DatabaseQueryCommand as any)($app['db'], $table);
+            return new DatabaseQueryCommand($app['db']);
         });
     }
 

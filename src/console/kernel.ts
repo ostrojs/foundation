@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import path from 'path';
+import path from 'node:path';
 import KernelContract from '@ostro/contracts/console/kernel';
 import Assistant from '@ostro/console/application';
 
@@ -66,7 +66,7 @@ class Kernel extends KernelContract {
      */
     public getAssistant() {
         if (!this.assistant) {
-            return this.assistant = (new (Assistant as any)(this.$app, this.$app.version()))
+            return this.assistant = new Assistant(this.$app)
                 .resolveCommands(this.$commands);
         }
 
@@ -121,9 +121,13 @@ class Kernel extends KernelContract {
             if (fs.existsSync($paths)) {
                 let state = fs.lstatSync($paths)
                 if (state.isFile()) {
-                    return this.load(require($paths))
+                    let mod = require($paths);
+                    if (mod && (mod.__esModule || Object.prototype.hasOwnProperty.call(mod, 'default')) && mod.default) {
+                        mod = mod.default;
+                    }
+                    return this.load(mod);
                 } else {
-                    return this.load(fs.readdirSync($paths).map(filename => this.load(path.resolve($paths, filename))));
+                    return fs.readdirSync($paths).map(filename => this.load(path.resolve($paths, filename)));
                 }
             }
         } else if ($paths instanceof Array) {

@@ -1,12 +1,15 @@
 import HttpContext from '@ostro/http/httpContext';
 import type { IHttpContext } from '@ostro/contracts/foundation/httpContext';
+import type { IHttpRequest } from '@ostro/contracts/http/request';
+import type { IHttpResponse } from '@ostro/contracts/http/response';
+import type { IAuthRequest } from '@ostro/contracts/auth/guard';
 
 /**
  * Class FoundationHttpContext.
  */
 class FoundationHttpContext extends HttpContext implements IHttpContext {
-    public declare request: any;
-    public declare response: any;
+    public declare request: IHttpRequest;
+    public declare response: IHttpResponse;
     public declare $app: any;
 
     /**
@@ -15,7 +18,7 @@ class FoundationHttpContext extends HttpContext implements IHttpContext {
      * @param response - Response instance
      * @param next - Next function
      */
-    constructor(request: any, response: any, next: Function) {
+    constructor(request: any, response: any, next?: Function) {
         super(request, response, next);
     }
 
@@ -23,8 +26,8 @@ class FoundationHttpContext extends HttpContext implements IHttpContext {
      * Get auth.
      * @returns Auth object
      */
-    public get auth(): any {
-        return this.request.auth;
+    public get auth(): IAuthRequest {
+        return this.request.auth as IAuthRequest;
     }
 
     /**

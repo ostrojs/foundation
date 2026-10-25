@@ -1,6 +1,6 @@
 import Repository from '@ostro/config/repository';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 /**
  * Class LoadConfiguration.
@@ -57,12 +57,12 @@ class LoadConfiguration {
 
         const configFiles = fs.readdirSync(configPath);
         for (const dir of configFiles) {
-            const fileName = dir.substr(0, dir.indexOf('.'));
+            const fileName = dir.substring(0, dir.indexOf('.') !== -1 ? dir.indexOf('.') : dir.length);
             if ((configFiles as any)[fileName]) {
                 if (typeof (configFiles as any)[fileName] === 'object') {
                     files.push((configFiles as any)[fileName]);
                 }
-            } else {
+            } else if (fileName) {
                 files.push(fileName);
             }
         }

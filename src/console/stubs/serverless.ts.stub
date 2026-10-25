@@ -1,0 +1,17 @@
+import app from './bootstrap/app';
+import requestHandler from '@ostro/foundation/http/request';
+import responseHandler from '@ostro/foundation/http/response';
+import type { IHttpKernel } from '@ostro/contracts/http/kernel';
+import type { IServerless } from '@ostro/contracts/serverless/serverless';
+
+const kernel: IHttpKernel = app.make('@ostro/contracts/http/kernel');
+
+const serverless: IServerless = app.make('@ostro/serverless', app.config);
+
+serverless.request(requestHandler);
+
+serverless.response(responseHandler);
+
+serverless.register(kernel.handle({}));
+
+export default serverless;

@@ -1,5 +1,6 @@
 import Facade from '@ostro/support/facades/facade';
 import AliasLoader from '../aliasLoader';
+import type { IConfig } from '@ostro/contracts/config/repository';
 
 /**
  * Class RegisterFacades.
@@ -12,7 +13,8 @@ class RegisterFacades {
      */
     public bootstrap($app: any): void {
         Facade.setFacadeApplication($app);
-        const aliasLoader = new AliasLoader($app.make('config').get('app.aliases', []));
+        const configRepo = $app.make('config') as IConfig;
+        const aliasLoader = new AliasLoader(configRepo.get('app.aliases', []));
         aliasLoader.registerGlobal();
     }
 }

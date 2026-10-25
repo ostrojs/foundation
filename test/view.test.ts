@@ -1,8 +1,9 @@
+import { describe, test, expect, jest } from "@jest/globals";
 import ViewException from '../src/view/viewException';
 import ViewHelpers from '../src/view/helpers';
 import BindView from '../src/view/middleware/BindViewOnResponse';
 import ViewEngine from '../src/view/viewEngine';
-import path from 'path';
+import path from 'node:path';
 
 describe('View system', () => {
     test('ViewException creates proper error instance', () => {

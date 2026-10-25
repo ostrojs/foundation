@@ -5,12 +5,14 @@ import { implement } from '@ostro/support/function';
 /**
  * Class ConsoleSupportServiceProvider.
  */
-class ConsoleSupportServiceProvider extends (implement(AggregateServiceProvider, DeferrableProvider) as any) {
+class ConsoleSupportServiceProvider extends implement(AggregateServiceProvider, DeferrableProvider) {
 
-    public $providers: string[] = [
-        '@ostro/foundation/providers/assistantServiceProvider',
-        '@ostro/database/migrationServiceProvider'
-    ];
+    public get $providers(): string[] {
+        return [
+            '@ostro/foundation/providers/assistantServiceProvider',
+            '@ostro/database/migrationServiceProvider'
+        ];
+    }
 }
 
 export default ConsoleSupportServiceProvider;

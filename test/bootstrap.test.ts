@@ -1,3 +1,4 @@
+import { describe, test, expect, jest } from "@jest/globals";
 import BootProviders from '../src/bootstrap/bootProviders';
 import RegisterProviders from '../src/bootstrap/registerProviders';
 import RegisterFacades from '../src/bootstrap/registerFacades';
@@ -6,11 +7,11 @@ import HandleSystemError from '../src/bootstrap/handleSystemError';
 import LoadConfiguration from '../src/bootstrap/loadConfiguration';
 import RequestBound from '../src/bootstrap/requestBound';
 import ResponseBound from '../src/bootstrap/responseBound';
-import http from 'http';
+import http from 'node:http';
 const ServerRequest = http.IncomingMessage;
 const ServerResponse = http.ServerResponse;
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import Facade from '@ostro/support/facades/facade';
 
 describe('Bootstrap classes', () => {
@@ -38,8 +39,8 @@ describe('Bootstrap classes', () => {
         const bootstrapper = new RegisterFacades();
         bootstrapper.bootstrap(app);
         expect(Facade.getFacadeApplication()).toBe(app);
-        expect((global as any).TestFacadeAlias).toBe(path);
-        delete (global as any).TestFacadeAlias;
+        expect((global as unknown as Record<string, unknown>).TestFacadeAlias).toBe(path);
+        delete (global as unknown as Record<string, unknown>).TestFacadeAlias;
     });
 
     test('LoadEnvironmentVariables loads dotenv config', () => {
@@ -182,8 +183,8 @@ describe('Bootstrap classes', () => {
         const reqBound = new RequestBound();
         reqBound.bootstrap(app);
 
-        expect((ServerRequest.prototype as any).app).toBe(app);
-        expect(typeof (ServerRequest.prototype as any).old).toBe('function');
+        expect((ServerRequest.prototype as unknown as Record<string, unknown>).app).toBe(app);
+        expect(typeof (ServerRequest.prototype as unknown as Record<string, unknown>).old).toBe('function');
     });
 
     test('ResponseBound binds app and copies prototype methods to ServerResponse', () => {
@@ -191,7 +192,7 @@ describe('Bootstrap classes', () => {
         const resBound = new ResponseBound();
         resBound.bootstrap(app);
 
-        expect((ServerResponse.prototype as any).app).toBe(app);
-        expect(typeof (ServerResponse.prototype as any).with).toBe('function');
+        expect((ServerResponse.prototype as unknown as Record<string, unknown>).app).toBe(app);
+        expect(typeof (ServerResponse.prototype as unknown as Record<string, unknown>).with).toBe('function');
     });
 });

@@ -8,8 +8,8 @@ import JsonException from '@ostro/contracts/http/jsonException';
 import Redirect from '@ostro/contracts/http/redirectResponse';
 import Session from '@ostro/contracts/session/session';
 import AuthenticationException from '@ostro/auth/authenticationException';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 
 function except<T extends Record<string, any>>(obj: T, keys: string[]): Partial<T> {
     const target: Partial<T> = {};
@@ -23,8 +23,12 @@ function except<T extends Record<string, any>>(obj: T, keys: string[]): Partial<
 
 // Framework globals: app, route
 
-const kHandle: unique symbol = Symbol('handle');
-const kLogger: unique symbol = Symbol('logger');
+interface ILogger {
+    getConfig?(key?: string): any;
+    error(message: any, context?: any): void;
+    channel(name: string): ILogger;
+    [key: string]: any;
+}
 
 /**
  * Class Handler.
@@ -39,17 +43,18 @@ class Handler {
 
     public $dontFlash: string[] = [];
 
-    public [kHandle]: any;
-    public [kLogger]: any;
+
+    #handle: any;
+    #logger: ILogger | null = null;
 
     /**
      * Create a new instance.
      * @param handler - Exception handler instance
      */
     constructor(handler: Function | any) {
-        this[kHandle] = handler;
-        const appFn: any = typeof app === 'function' ? app : (typeof (global as any).app === 'function' ? (global as any).app : null);
-        this[kLogger] = appFn ? appFn('logger') : null;
+        this.#handle = handler;
+        const appFn = typeof app === 'function' ? app : (typeof (global as { app?: (k?: string) => unknown }).app === 'function' ? (global as { app?: (k?: string) => unknown }).app! : null);
+        this.#logger = appFn ? (appFn('logger') as ILogger) : null;
     }
 
     /**
@@ -91,28 +96,28 @@ class Handler {
             this.redirect(response, $e);
         } else if ($e instanceof FileNotFoundException) {
             response.send({
-                name: ($e as any).name,
-                message: ($e as any).message
-            }, ($e as any).statusCode);
+                name: ($e as Error).name,
+                message: ($e as Error).message
+            }, ($e as { statusCode?: number }).statusCode);
         } else if ($e instanceof FileUploadException) {
             response.send({
-                name: ($e as any).name,
-                message: ($e as any).message
-            }, ($e as any).statusCode);
+                name: ($e as Error).name,
+                message: ($e as Error).message
+            }, ($e as { statusCode?: number }).statusCode);
         } else if ($e instanceof JsonException) {
             response.send({
-                name: ($e as any).name,
-                message: ($e as any).message,
-                errors: ($e as any).errors
-            }, ($e as any).statusCode);
-        } else if (typeof ($e as any).message === 'object') {
-            this[kHandle].render(
+                name: ($e as Error).name,
+                message: ($e as Error).message,
+                errors: ($e as { errors?: unknown }).errors
+            }, ($e as { statusCode?: number }).statusCode);
+        } else if (typeof ($e as Error).message === 'object') {
+            this.#handle.render(
                 request,
                 response,
                 $e
             );
         } else {
-            this[kHandle].render(
+            this.#handle.render(
                 request,
                 response,
                 $e
@@ -214,15 +219,15 @@ class Handler {
     public tokenMismatchException(request: any, response: any, $e: any): any {
         if (request.wantJson() || request.ajax()) {
             response.send({
-                name: ($e as any).name || 'Token mismatch exception',
-                errors: ($e as any).errors || {},
-                message: ($e as any).message || 'Page Expired'
-            }, (($e as any).statusCode || 403));
+                name: ($e as Error).name || 'Token mismatch exception',
+                errors: ($e as { errors?: unknown }).errors || {},
+                message: ($e as Error).message || 'Page Expired'
+            }, (($e as { statusCode?: number }).statusCode || 403));
         } else {
             return fs.readFile(path.join(__dirname, 'template/errors/403'), {
                 encoding: 'utf8'
             }, function (error: any, data: any) {
-                response.send(data, ($e as any).statusCode);
+                response.send(data, ($e as { statusCode?: number }).statusCode);
             });
         }
     }
@@ -237,7 +242,7 @@ class Handler {
         return fs.readFile(path.join(__dirname, 'template/errors/404'), {
             encoding: 'utf8'
         }, function (error: any, data: any) {
-            response.send(data, ($e as any).statusCode);
+            response.send(data, ($e as { statusCode?: number }).statusCode);
         });
     }
 
@@ -247,13 +252,13 @@ class Handler {
      */
     public report($e: any): void {
         if (!this.$dontReport.find((clazz: any) => $e instanceof clazz)) {
-            if (typeof this[kLogger].getConfig === 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
+            if (this.#logger && typeof this.#logger.getConfig === 'function' && !this.#logger.getConfig('ignore_exceptions')) {
                 if ($e && typeof $e === 'object') {
                     if (typeof $e.stack === 'string') {
                         $e.capture = $e.stack.split('\n    at ');
                     }
                 }
-                this[kLogger].error($e);
+                this.#logger.error($e);
             }
         }
     }
@@ -263,7 +268,9 @@ class Handler {
      * @param $e - Error object
      */
     public renderForConsole($e: any): void {
-        this[kLogger].channel('console').error($e);
+        if (this.#logger) {
+            this.#logger.channel('console').error($e);
+        }
     }
 }
 

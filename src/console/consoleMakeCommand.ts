@@ -1,8 +1,6 @@
-import path from 'path';
+import path from 'node:path';
 import GeneratorCommand from '@ostro/console/generatorCommand';
 import * as StringHelper from '@ostro/support/string';
-import { trim } from '@ostro/support/function';
-
 /**
  * Class FactoryMakeCommand.
  */

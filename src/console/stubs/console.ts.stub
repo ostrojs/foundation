@@ -10,7 +10,7 @@ class {{ class }} extends Command {
         return 'Command description';
     }
 
-    public handle(): any {
+    public handle(): void {
 
     }
 }

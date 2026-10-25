@@ -1,7 +1,7 @@
 declare var base_path: any, is_null: any, isSymbolicLink: any, public_path: any, storage_path: any;
 import Command from '@ostro/console/command';
 import { isSymbolicLink as defaultIsSymbolicLink } from '@ostro/support/function';
-const checkSymbolicLink = (p: string) => typeof (global as any).isSymbolicLink === 'function' ? (global as any).isSymbolicLink(p) : defaultIsSymbolicLink(p);
+const checkSymbolicLink = (p: string) => typeof isSymbolicLink === 'function' ? isSymbolicLink(p) : defaultIsSymbolicLink(p);
 /**
  * Class StorageLinkCommand.
  */

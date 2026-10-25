@@ -1,18 +1,16 @@
 import Ouch from 'ouch';
 
-const kHandler: unique symbol = Symbol('handler');
-
 /**
  * Class Whoops.
  */
 class Whoops {
-    private [kHandler]: any;
+    #handler: any;
 
     /**
      * Create a new instance.
      */
     constructor() {
-        this[kHandler] = this.register();
+        this.#handler = this.register();
     }
 
     /**
@@ -20,7 +18,11 @@ class Whoops {
      * @returns Ouch instance
      */
     public register(): any {
-        return (new (Ouch as any)()).pushHandler(new (Ouch as any).handlers.PrettyPageHandler('orange'));
+        const OuchConstructor = Ouch as {
+            new (): { pushHandler: (handler: unknown) => unknown };
+            handlers: { PrettyPageHandler: new (theme: string) => unknown };
+        };
+        return (new OuchConstructor()).pushHandler(new OuchConstructor.handlers.PrettyPageHandler('orange'));
     }
 
     /**
@@ -33,7 +35,7 @@ class Whoops {
         if (!response.headersSent) {
             response.writeHead(($exception.statusCode || 500), { 'Content-Type': 'text/html' });
         }
-        this[kHandler].handleException($exception, request, response);
+        this.#handler.handleException($exception, request, response);
     }
 }
 

@@ -1,6 +1,6 @@
 import HttpResponse from '@ostro/http/response';
 import CoreHttpResponse from '../http/response';
-import http from 'http';
+import http from 'node:http';
 const ServerResponse: any = http.ServerResponse;
 
 /**
