@@ -14,11 +14,15 @@ class RequestBound {
      */
     public bootstrap($app: any): void {
         ServerRequest.prototype['app'] = $app;
-        for (const a of Object.getOwnPropertyNames(HttpRequest.prototype)) {
-            ServerRequest.prototype[a] = (HttpRequest.prototype as any)[a];
+        for (const [key, desc] of Object.entries(Object.getOwnPropertyDescriptors(HttpRequest.prototype))) {
+            if (key !== 'constructor') {
+                Object.defineProperty(ServerRequest.prototype, key, desc);
+            }
         }
-        for (const a of Object.getOwnPropertyNames(CoreHttpRequest.prototype)) {
-            ServerRequest.prototype[a] = (CoreHttpRequest.prototype as any)[a];
+        for (const [key, desc] of Object.entries(Object.getOwnPropertyDescriptors(CoreHttpRequest.prototype))) {
+            if (key !== 'constructor') {
+                Object.defineProperty(ServerRequest.prototype, key, desc);
+            }
         }
     }
 }
