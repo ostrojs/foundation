@@ -15,11 +15,15 @@ class ResponseBound {
     public bootstrap($app: any): void {
         ServerResponse.prototype['app'] = $app;
 
-        for (const a of Object.getOwnPropertyNames(HttpResponse.prototype)) {
-            ServerResponse.prototype[a] = (HttpResponse.prototype as any)[a];
+        for (const [key, desc] of Object.entries(Object.getOwnPropertyDescriptors(HttpResponse.prototype))) {
+            if (key !== 'constructor') {
+                Object.defineProperty(ServerResponse.prototype, key, desc);
+            }
         }
-        for (const a of Object.getOwnPropertyNames(CoreHttpResponse.prototype)) {
-            ServerResponse.prototype[a] = (CoreHttpResponse.prototype as any)[a];
+        for (const [key, desc] of Object.entries(Object.getOwnPropertyDescriptors(CoreHttpResponse.prototype))) {
+            if (key !== 'constructor') {
+                Object.defineProperty(ServerResponse.prototype, key, desc);
+            }
         }
     }
 }
