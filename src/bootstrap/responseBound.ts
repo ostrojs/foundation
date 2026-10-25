@@ -15,7 +15,12 @@ class ResponseBound {
     public bootstrap($app: any): void {
         ServerResponse.prototype['app'] = $app;
 
-        Object.assign(ServerResponse.prototype, HttpResponse.prototype, CoreHttpResponse.prototype);
+        for (const a of Object.getOwnPropertyNames(HttpResponse.prototype)) {
+            ServerResponse.prototype[a] = (HttpResponse.prototype as any)[a];
+        }
+        for (const a of Object.getOwnPropertyNames(CoreHttpResponse.prototype)) {
+            ServerResponse.prototype[a] = (CoreHttpResponse.prototype as any)[a];
+        }
     }
 }
 

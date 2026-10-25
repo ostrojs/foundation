@@ -14,7 +14,12 @@ class RequestBound {
      */
     public bootstrap($app: any): void {
         ServerRequest.prototype['app'] = $app;
-        Object.assign(ServerRequest.prototype, HttpRequest.prototype, CoreHttpRequest.prototype);
+        for (const a of Object.getOwnPropertyNames(HttpRequest.prototype)) {
+            ServerRequest.prototype[a] = (HttpRequest.prototype as any)[a];
+        }
+        for (const a of Object.getOwnPropertyNames(CoreHttpRequest.prototype)) {
+            ServerRequest.prototype[a] = (CoreHttpRequest.prototype as any)[a];
+        }
     }
 }
 

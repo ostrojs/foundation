@@ -58,7 +58,11 @@ class LoadConfiguration {
         const configFiles = fs.readdirSync(configPath);
         for (const dir of configFiles) {
             const fileName = dir.substring(0, dir.indexOf('.') !== -1 ? dir.indexOf('.') : dir.length);
-            if (fileName) {
+            if ((configFiles as any)[fileName]) {
+                if (typeof (configFiles as any)[fileName] === 'object') {
+                    files.push((configFiles as any)[fileName]);
+                }
+            } else if (fileName) {
                 files.push(fileName);
             }
         }
