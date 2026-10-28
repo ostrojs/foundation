@@ -1,6 +1,6 @@
 {
     "name": "@ostro/foundation",
-    "version": "2.0.0-alpha.4",
+    "version": "2.0.0-alpha.5",
     "description": "Foundation for OstroJS",
     "main": "application.js",
     "exports": {
@@ -44,7 +44,7 @@
         "serve-static": "^1.16.2"
     },
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=22.0.0"
     },
     "engineStrict": true,
     "keywords": [
@@ -70,11 +70,5 @@
         "ts-jest": "^29.4.15",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.0"
-    },
-    "overrides": {
-        "sprintf-js": "^1.1.3",
-        "braces": "^3.0.3",
-        "argparse": "^2.0.1",
-        "js-yaml": "^4.1.0"
     }
 }

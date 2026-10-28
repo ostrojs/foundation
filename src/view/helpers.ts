@@ -105,6 +105,26 @@ class Helpers {
     }
 
     /**
+     * vite method.
+     * @param entries - Entry path or array of paths
+     * @param buildDirectory - Build directory inside public (defaults to 'build')
+     * @returns Rendered HTML script/link tags
+     */
+    public vite(entries: string | string[], buildDirectory: string = 'build'): string {
+        return this.#app.vite.tags(entries, buildDirectory);
+    }
+
+    /**
+     * viteAsset method.
+     * @param entry - Entry path
+     * @param buildDirectory - Build directory inside public (defaults to 'build')
+     * @returns Resolved asset URL
+     */
+    public viteAsset(entry: string, buildDirectory: string = 'build'): string {
+        return this.#app.vite.asset(entry, buildDirectory);
+    }
+
+    /**
      * absolutePath method.
      * @returns Absolute path
      */

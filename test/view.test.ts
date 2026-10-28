@@ -91,6 +91,14 @@ describe('View system', () => {
         // mix
         expect(helpers.mix('app.css')).toBe('/mix/app.css');
 
+        // vite and viteAsset
+        appMock.vite = {
+            tags: jest.fn((e: any, b: any) => `<script src="/${b}/${e}"></script>`),
+            asset: jest.fn((e: any, b: any) => `/${b}/${e}`)
+        };
+        expect(helpers.vite('app.js')).toBe('<script src="/build/app.js"></script>');
+        expect(helpers.viteAsset('app.js')).toBe('/build/app.js');
+
         // absolutePath
         expect(helpers.absolutePath()).toBe('http://localhost:3000/users/1');
     });

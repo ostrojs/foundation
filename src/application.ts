@@ -5,6 +5,7 @@ import Env from '@ostro/support/env';
 import path from 'node:path';
 import fs from 'node:fs';
 import Mix from './mix';
+import Vite from './vite';
 import LocaleUpdated from './events/localeUpdated';
 import worker_threads from 'node:worker_threads';
 import type { IConfig } from '@ostro/contracts/config/repository';
@@ -88,7 +89,10 @@ class Application extends Container {
     public registerBaseBindings() {
         this.instance('app', this);
         this.singleton('mix', function (app) {
-            return new Mix(app)
+            return new Mix(app);
+        });
+        this.singleton('vite', function (app) {
+            return new Vite(app);
         });
 
     }
