@@ -149,4 +149,57 @@ describe('Vite asset resolution', () => {
         expect(reportMock).toHaveBeenCalled();
         expect(vite.tags('missing.js')).toBe('');
     });
+
+    test('getManifest falls back to public_path(manifest.json) when build/manifest.json does not exist', () => {
+        const buildManifestPath = path.join(buildDir, 'manifest.json');
+        if (fs.existsSync(buildManifestPath)) {
+            fs.unlinkSync(buildManifestPath);
+        }
+        const rootManifest = {
+            'resources/assets/js/app.ts': {
+                file: 'assets/root-app.js',
+                name: 'app',
+                isEntry: true
+            }
+        };
+        fs.writeFileSync(path.join(publicDir, 'manifest.json'), JSON.stringify(rootManifest));
+
+        const appMock: any = {
+            config: {
+                get: (k: string) => ''
+            }
+        };
+        const vite = new Vite(appMock);
+        expect(vite.asset('resources/assets/js/app.ts')).toBe('/assets/root-app.js');
+        expect(vite.tags('resources/assets/js/app.ts')).toContain('<script type="module" src="/assets/root-app.js"></script>');
+    });
+
+    test('getManifest falls back to public_path(build/manifest.json) when default buildDirectory is empty', () => {
+        if (fs.existsSync(path.join(publicDir, 'manifest.json'))) {
+            fs.unlinkSync(path.join(publicDir, 'manifest.json'));
+        }
+        const buildManifest = {
+            'resources/assets/js/app.ts': {
+                file: 'assets/build-app.js',
+                name: 'app',
+                isEntry: true
+            }
+        };
+        fs.writeFileSync(path.join(buildDir, 'manifest.json'), JSON.stringify(buildManifest));
+
+        const appMock: any = {
+            config: {
+                get: (k: string) => ''
+            }
+        };
+        const vite = new Vite(appMock);
+        expect(vite.asset('resources/assets/js/app.ts')).toBe('/build/assets/build-app.js');
+    });
+
+    test('hotUrl and isHot with custom or empty buildDirectory', () => {
+        fs.writeFileSync(path.join(publicDir, 'hot'), 'http://localhost:5173\n');
+        const vite = new Vite({});
+        expect(vite.isHot('custom')).toBe(true);
+        expect(vite.hotUrl('custom')).toBe('http://localhost:5173');
+    });
 });

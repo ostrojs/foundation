@@ -29,18 +29,33 @@ class Vite {
      * Check if hot reload file exists.
      * @param $buildDirectory - Build directory inside public
      */
-    public isHot($buildDirectory: string = 'build'): boolean {
-        const hotFile = public_path('hot');
-        return fs.existsSync(hotFile);
+    /**
+     * Check if hot reload file exists.
+     * @param $buildDirectory - Build directory inside public
+     */
+    public isHot($buildDirectory: string = ''): boolean {
+        const hotFile = $buildDirectory
+            ? public_path(`${$buildDirectory}/hot`.replace(/\/+/g, '/'))
+            : public_path('hot');
+        if (fs.existsSync(hotFile)) {
+            return true;
+        }
+        return fs.existsSync(public_path('hot'));
     }
 
     /**
      * Get hot file URL.
      */
-    public hotUrl(): string {
-        const hotFile = public_path('hot');
+    public hotUrl($buildDirectory: string = ''): string {
+        const hotFile = $buildDirectory
+            ? public_path(`${$buildDirectory}/hot`.replace(/\/+/g, '/'))
+            : public_path('hot');
         if (fs.existsSync(hotFile)) {
             return fs.readFileSync(hotFile, 'utf8').trim();
+        }
+        const fallbackHot = public_path('hot');
+        if (fs.existsSync(fallbackHot)) {
+            return fs.readFileSync(fallbackHot, 'utf8').trim();
         }
         return '';
     }
@@ -50,30 +65,36 @@ class Vite {
      * @param $entry - Entry file path (e.g. 'resources/assets/js/app.ts')
      * @param $buildDirectory - Build directory inside public
      */
-    public asset($entry: string, $buildDirectory: string = 'build'): string {
+    public asset($entry: string, $buildDirectory: string = ''): string {
         if (this.isHot($buildDirectory)) {
-            const url = this.hotUrl();
+            const url = this.hotUrl($buildDirectory);
             const cleanEntry = $entry.replace(/^\/+/, '');
             return `${url}/${cleanEntry}`;
         }
 
         const manifest = this.getManifest($buildDirectory);
+        const resolvedDir = (manifest as any).__buildDirectory ?? $buildDirectory;
         const cleanEntry = $entry.replace(/^\/+/, '');
         
         if (isset(manifest[cleanEntry])) {
             const chunk = manifest[cleanEntry];
             const file = typeof chunk === 'string' ? chunk : chunk.file;
             const assetUrl = this.$app['config']?.get('app.asset_url') || '';
-            const buildPath = `/${$buildDirectory}/${file}`.replace(/\/+/g, '/');
+            const buildPath = resolvedDir
+                ? `/${resolvedDir}/${file}`.replace(/\/+/g, '/')
+                : `/${file}`.replace(/\/+/g, '/');
             return `${assetUrl}${buildPath}`;
         }
 
         // Check by basename if direct entry not matched
         for (const [key, val] of Object.entries(manifest)) {
+            if (key.startsWith('__')) continue;
             if (key.endsWith(cleanEntry) || cleanEntry.endsWith(key)) {
                 const file = typeof val === 'string' ? val : (val as any).file;
                 const assetUrl = this.$app['config']?.get('app.asset_url') || '';
-                const buildPath = `/${$buildDirectory}/${file}`.replace(/\/+/g, '/');
+                const buildPath = resolvedDir
+                    ? `/${resolvedDir}/${file}`.replace(/\/+/g, '/')
+                    : `/${file}`.replace(/\/+/g, '/');
                 return `${assetUrl}${buildPath}`;
             }
         }
@@ -93,12 +114,12 @@ class Vite {
      * @param $entries - Entry file paths
      * @param $buildDirectory - Build directory inside public
      */
-    public tags($entries: string | string[], $buildDirectory: string = 'build'): string {
+    public tags($entries: string | string[], $buildDirectory: string = ''): string {
         const entries = Array.isArray($entries) ? $entries : [$entries];
         const html: string[] = [];
 
         if (this.isHot($buildDirectory)) {
-            const hotUrl = this.hotUrl();
+            const hotUrl = this.hotUrl($buildDirectory);
             html.push(`<script type="module" src="${hotUrl}/@vite/client"></script>`);
             for (const entry of entries) {
                 const cleanEntry = entry.replace(/^\/+/, '');
@@ -108,6 +129,7 @@ class Vite {
         }
 
         const manifest = this.getManifest($buildDirectory);
+        const resolvedDir = (manifest as any).__buildDirectory ?? $buildDirectory;
         const assetUrl = this.$app['config']?.get('app.asset_url') || '';
 
         for (const entry of entries) {
@@ -115,6 +137,7 @@ class Vite {
             let chunk = manifest[cleanEntry];
             if (!chunk) {
                 for (const [key, val] of Object.entries(manifest)) {
+                    if (key.startsWith('__')) continue;
                     if (key.endsWith(cleanEntry) || cleanEntry.endsWith(key)) {
                         chunk = val;
                         break;
@@ -124,7 +147,9 @@ class Vite {
 
             if (chunk) {
                 const file = typeof chunk === 'string' ? chunk : chunk.file;
-                const href = `${assetUrl}/${$buildDirectory}/${file}`.replace(/\/+/g, '/');
+                const href = resolvedDir
+                    ? `${assetUrl}/${resolvedDir}/${file}`.replace(/\/+/g, '/')
+                    : `${assetUrl}/${file}`.replace(/\/+/g, '/');
                 if (file.endsWith('.css')) {
                     html.push(`<link rel="stylesheet" href="${href}">`);
                 } else {
@@ -134,7 +159,9 @@ class Vite {
                 // If JS imports CSS chunks
                 if (chunk.css && Array.isArray(chunk.css)) {
                     for (const cssFile of chunk.css) {
-                        const cssHref = `${assetUrl}/${$buildDirectory}/${cssFile}`.replace(/\/+/g, '/');
+                        const cssHref = resolvedDir
+                            ? `${assetUrl}/${resolvedDir}/${cssFile}`.replace(/\/+/g, '/')
+                            : `${assetUrl}/${cssFile}`.replace(/\/+/g, '/');
                         html.push(`<link rel="stylesheet" href="${cssHref}">`);
                     }
                 }
@@ -157,8 +184,25 @@ class Vite {
      * Get parsed manifest.
      * @param $buildDirectory - Build directory inside public
      */
-    public getManifest($buildDirectory: string = 'build'): Record<string, any> {
-        const manifestPath = public_path(`${$buildDirectory}/manifest.json`.replace(/\/+/g, '/'));
+    public getManifest($buildDirectory: string = ''): Record<string, any> {
+        let manifestPath = $buildDirectory
+            ? public_path(`${$buildDirectory}/manifest.json`.replace(/\/+/g, '/'))
+            : public_path('manifest.json');
+
+        let resolvedBuildDir = $buildDirectory;
+        if (!fs.existsSync(manifestPath)) {
+            const fallbackPath = public_path('manifest.json');
+            if (fs.existsSync(fallbackPath)) {
+                manifestPath = fallbackPath;
+                resolvedBuildDir = '';
+            } else if (!$buildDirectory) {
+                const buildSubdir = public_path('build/manifest.json');
+                if (fs.existsSync(buildSubdir)) {
+                    manifestPath = buildSubdir;
+                    resolvedBuildDir = 'build';
+                }
+            }
+        }
 
         if (!isset(this.$manifests[manifestPath])) {
             try {
@@ -166,7 +210,13 @@ class Vite {
                 if (!stat.isFile()) {
                     throw new ViteException('The Vite manifest does not exist.');
                 }
-                this.$manifests[manifestPath] = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                const parsed = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                Object.defineProperty(parsed, '__buildDirectory', {
+                    value: resolvedBuildDir,
+                    enumerable: false,
+                    writable: true
+                });
+                this.$manifests[manifestPath] = parsed;
             } catch (e: any) {
                 if (e instanceof ViteException) throw e;
                 throw new ViteException('The Vite manifest does not exist.');
