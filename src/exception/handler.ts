@@ -252,7 +252,7 @@ class Handler {
      */
     public report($e: any): void {
         if (!this.$dontReport.find((clazz: any) => $e instanceof clazz)) {
-            if (this.#logger && typeof this.#logger.getConfig === 'function' && !this.#logger.getConfig('ignore_exceptions')) {
+            if (this.#logger && !this.#logger.getConfig?.('ignore_exceptions')) {
                 if ($e && typeof $e === 'object') {
                     if (typeof $e.stack === 'string') {
                         $e.capture = $e.stack.split('\n    at ');

@@ -49,6 +49,10 @@ class Application extends Container {
 
     _databasePath;
 
+    _bootstrapPath;
+
+    _configPath;
+
     _langPath;
 
     _storagePath;
@@ -376,7 +380,7 @@ class Application extends Container {
     public path(dir: string = '') {
         let appPath = this._appPath ? this._appPath : path.normalize(path.join(this._basePath, 'app'));
 
-        return path.normalize(path.join(appPath + dir));
+        return path.normalize(path.join(appPath, dir));
     }
 
     /**
@@ -398,7 +402,7 @@ class Application extends Container {
      * @returns {any}
      */
     public basePath(dir: string = '') {
-        return path.normalize(path.join(this._basePath, dir))
+        return path.normalize(path.join(this._basePath, dir));
     }
 
     /**
@@ -407,18 +411,20 @@ class Application extends Container {
      * @returns {any}
      */
     public bootstrapPath(dir: string = '') {
-        const rootBoot = path.join(this._basePath, 'bootstrap');
-        const distBoot = path.join(this._basePath, '.dist', 'bootstrap');
-        const buildBoot = path.join(this._basePath, 'build', 'bootstrap');
-        const srcBoot = path.join(this._basePath, 'src', 'bootstrap');
-        let targetDir = rootBoot;
-        if (!fs.existsSync(path.join(rootBoot, 'app.js'))) {
-            if (fs.existsSync(path.join(distBoot, 'app.js'))) targetDir = distBoot;
-            else if (fs.existsSync(path.join(buildBoot, 'app.js'))) targetDir = buildBoot;
-            else if (fs.existsSync(rootBoot)) targetDir = rootBoot;
-            else if (fs.existsSync(srcBoot)) targetDir = srcBoot;
-        }
-        return path.normalize(path.join(targetDir, dir));
+        return path.normalize(path.join((this._bootstrapPath ? this._bootstrapPath : path.join(this._basePath, 'bootstrap')), dir));
+    }
+
+    /**
+     * useBootstrapPath method.
+     * @param {*} dir
+     * @returns {any}
+     */
+    public useBootstrapPath(dir: any) {
+        this._bootstrapPath = dir;
+
+        this.instance('path.bootstrap', dir);
+
+        return this;
     }
 
     /**
@@ -427,18 +433,20 @@ class Application extends Container {
      * @returns {any}
      */
     public configPath(dir: string = '') {
-        const rootConfig = path.join(this._basePath, 'config');
-        const distConfig = path.join(this._basePath, '.dist', 'config');
-        const buildConfig = path.join(this._basePath, 'build', 'config');
-        const srcConfig = path.join(this._basePath, 'src', 'config');
-        let targetDir = rootConfig;
-        if (!fs.existsSync(path.join(rootConfig, 'app.js'))) {
-            if (fs.existsSync(path.join(distConfig, 'app.js'))) targetDir = distConfig;
-            else if (fs.existsSync(path.join(buildConfig, 'app.js'))) targetDir = buildConfig;
-            else if (fs.existsSync(rootConfig)) targetDir = rootConfig;
-            else if (fs.existsSync(srcConfig)) targetDir = srcConfig;
-        }
-        return path.normalize(path.join(targetDir, dir));
+        return path.normalize(path.join((this._configPath ? this._configPath : path.join(this._basePath, 'config')), dir));
+    }
+
+    /**
+     * useConfigPath method.
+     * @param {*} dir
+     * @returns {any}
+     */
+    public useConfigPath(dir: any) {
+        this._configPath = dir;
+
+        this.instance('path.config', dir);
+
+        return this;
     }
 
     /**

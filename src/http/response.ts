@@ -17,9 +17,9 @@ class HttpResponse extends Response {
             body = model.serialize ? model.serialize() : body;
         } else if (body instanceof Collection) {
             const col = body as ICollection;
-            if (typeof col.isArray === 'function' && col.isArray()) {
+            if (col.isArray?.()) {
                 body = col.toArray();
-            } else if (typeof col.isJson === 'function' && col.isJson()) {
+            } else if (col.isJson?.()) {
                 body = col.toJSON();
             }
         }

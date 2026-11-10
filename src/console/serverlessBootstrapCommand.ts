@@ -32,7 +32,7 @@ class ServerlessBootstrapCommand extends Command {
      * @returns {any}
      */
     public getAppConfigFile() {
-        return this.$app.basePath('config/app.js')
+        return this.$app.configPath('app.js');
     }
 
     /**
@@ -59,7 +59,7 @@ class ServerlessBootstrapCommand extends Command {
             return super.isTypeScript();
         }
 
-        if (typeof this.$app.basePath !== 'function') {
+        if (!this.$app?.basePath) {
             return false;
         }
         try {
